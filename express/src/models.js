@@ -8,10 +8,9 @@ export class Message {
 }
 
 export class LoadedModel {
-  constructor(model, ident, info) {
+  constructor(model, ident) {
     this.model = model;
     this.ident = ident;
-    this.info = info;
   }
 }
 
