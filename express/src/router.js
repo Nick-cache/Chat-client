@@ -4,7 +4,11 @@ import { lmManager } from "./services.js";
 const router = express.Router();
 
 router.get("/list_models", async (req, res) => {
-  return res.status(200).json(lmManager.models);
+  return res.json(lmManager.models);
+});
+
+router.get("/list_loaded_models", async (req, res) => {
+  return res.json(lmManager.loaded_models);
 });
 
 // request body: { path: str, ident: str }
