@@ -24,7 +24,5 @@ router.post("/chat/:uuid", async (req, res) => {
   for await (const data of stream) {
     console.log(data);
   }
-  console.log(stream);
-
-  return res.json("ok");
+  return res.json(stream);
 });
