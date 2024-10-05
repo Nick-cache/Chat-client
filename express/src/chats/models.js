@@ -1,9 +1,10 @@
 export class Message {
-  constructor(uuid, role, content, chat_uuid) {
+  constructor(uuid, role, content, chat_uuid, date) {
     this.uuid = uuid;
     this.role = role;
     this.content = content;
     this.chat_uuid = chat_uuid;
+    this.date = date;
   }
 }
 

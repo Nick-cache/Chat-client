@@ -15,7 +15,6 @@ class LmManager {
 
   _fillLoadedModels = async () => {
     const models = await this.client.embedding.listLoaded();
-
     for await (const model of models) {
       this.loaded_models[model.identifier] = await this.client.embedding.get({
         identifier: model.identifier,

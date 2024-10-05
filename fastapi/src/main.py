@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-
 import uvicorn
 
 from src.chats.router import chat_router
