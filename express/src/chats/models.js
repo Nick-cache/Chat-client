@@ -17,6 +17,10 @@ export class Chat {
     this.history = {}; // {uuid: Message}
   }
 
+  changeName = (name) => {
+    this.name = name;
+  };
+
   changeModel = (model, model_ident) => {
     this.model = model;
     this.model_ident = model_ident;
