@@ -22,6 +22,7 @@ router.post("/chat/:uuid", async (req, res) => {
   const chat = lmManager.chats[chat_uuid];
   let stream = chat.stream(messages);
   for await (const data of stream) {
+    // There should be another ws stream which throws data to front - end
     console.log(data);
   }
   return res.json(stream);
