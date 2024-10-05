@@ -1,37 +1,49 @@
-import { LMStudioClient } from "@lmstudio/sdk";
+import SDK from "@lmstudio/sdk";
+const { LMStudioClient } = SDK;
 import { v4 as uuidv4 } from "uuid";
-import { Chat } from "./models";
+import { Chat } from "./models.js";
 
 class LmManager {
   client = new LMStudioClient();
 
   constructor() {
-    this.models = []; // list[str]
+    this.models = {}; // { path: Model }
     this.loaded_models = {}; // ident : [model, info]
-    this.projects = {}; // p_uuid : project
+    // this.projects = {}; // p_uuid : project
     this.chats = {}; // c_uuid : chat
   }
+  _fillLoadedModels = async () => {
+    const models = await this.client.llm.listLoaded();
+    for await (const model of models) {
+      this.loaded_models[model.identifier] = model;
+    }
+  };
 
-  getListModels = async () => {
-    if (this.models.length !== 0) return this.models;
+  _fillDownloadedModels = async () => {
     const models = await this.client.system.listDownloadedModels();
-    this.models = models;
-    return models;
+    for await (const model of models) {
+      this.models[model.path] = model;
+    }
+  };
+
+  init = async () => {
+    await this._fillDownloadedModels();
+    await this._fillLoadedModels();
   };
 
   load = async (path, ident) => {
     const model = await this.client.llm.load(path, {
+      identifier: ident,
       config: {
         gpuOffload: {
           ratio: 1,
-          // mainGpu: 1,
-          // tensorSplit: [1, 0],
+          mainGpu: 1,
+          tensorSplit: [1, 0],
         },
-        identifier: ident,
       },
     });
-    const info = await model.getModelInfo();
-    model.this.loaded_models[ident] = [model, info];
+    this.loaded_models[ident] = model;
+
     return model;
   };
 
@@ -54,3 +66,5 @@ class LmManager {
     return chat;
   };
 }
+
+export const lmManager = new LmManager();
