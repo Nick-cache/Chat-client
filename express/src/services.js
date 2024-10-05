@@ -12,6 +12,7 @@ class LmManager {
     // this.projects = {}; // p_uuid : project
     this.chats = {}; // c_uuid : chat
   }
+
   _fillLoadedModels = async () => {
     const models = await this.client.embedding.listLoaded();
 
