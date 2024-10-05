@@ -13,9 +13,12 @@ class LmManager {
     this.chats = {}; // c_uuid : chat
   }
   _fillLoadedModels = async () => {
-    const models = await this.client.llm.listLoaded();
+    const models = await this.client.embedding.listLoaded();
+
     for await (const model of models) {
-      this.loaded_models[model.identifier] = model;
+      this.loaded_models[model.identifier] = await this.client.embedding.get({
+        identifier: model.identifier,
+      });
     }
   };
 
