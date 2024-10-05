@@ -8,7 +8,11 @@ router.get("/list_models", async (req, res) => {
 });
 
 router.get("/list_loaded_models", async (req, res) => {
-  return res.json(lmManager.loaded_models);
+  const models = {
+    Llms: lmManager.loaded_llms,
+    Embeddings: lmManager.loaded_embeddings,
+  };
+  return res.json(models);
 });
 
 // request body: { path: str, ident: str }

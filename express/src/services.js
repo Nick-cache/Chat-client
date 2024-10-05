@@ -7,17 +7,28 @@ class LmManager {
   client = new LMStudioClient();
   constructor() {
     this.models = {}; // { path: Model }
-    this.loaded_models = {}; // ident : [model, info]
+    this.loaded_llms = {}; // ident : model
+    this.loaded_embeddings = {}; // ident : model
     this.chats = {}; // c_uuid : chat
     // this.projects = {}; // p_uuid : project
   }
 
-  _fillLoadedModels = async () => {
+  _fillLoadedLlms = async () => {
     const models = await this.client.llm.listLoaded();
     for await (const model of models) {
-      this.loaded_models[model.identifier] = await this.client.llm.get({
+      this.loaded_llms[model.identifier] = await this.client.llm.get({
         identifier: model.identifier,
       });
+    }
+  };
+
+  _fillLoadedEmbeddings = async () => {
+    const models = await this.client.embedding.listLoaded();
+    for await (const model of models) {
+      this.loaded_embeddings[model.identifier] =
+        await this.client.embedding.get({
+          identifier: model.identifier,
+        });
     }
   };
 
@@ -30,7 +41,8 @@ class LmManager {
 
   init = async () => {
     await this._fillDownloadedModels();
-    await this._fillLoadedModels();
+    await this._fillLoadedLlms();
+    await this._fillLoadedEmbeddings();
   };
 
   load = async (path, ident) => {
