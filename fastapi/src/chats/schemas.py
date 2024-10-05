@@ -27,7 +27,7 @@ class ChatResponseSchema(ChatSaveSchema):
 # ! MESSAGES
 class MessageSchema(BaseSchema):
     uuid: UUID4
-    role: str
+    role: str | None = None
     content: str
     tokens: int
     date: datetime

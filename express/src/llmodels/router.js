@@ -15,22 +15,19 @@ router.get("/list_loaded_models", async (req, res) => {
   return res.json(models);
 });
 
-// request body: { path: str, ident: str }
+// request body: { path: str, type: str, ident: str }
 router.post("/load_model", async (req, res) => {
   const path = req.body.path;
+  const type = req.body.type;
   const ident = req.body.ident;
-  if (lmManager.loaded_models[ident] !== undefined) {
-    return res.json(`Already loaded with ident: ${ident}`);
-  }
-  await lmManager.load(path, ident);
-  return res.json(`Loaded with ident: ${ident}`);
+  await lmManager.load(path, type, ident);
+  return res.json(`Loaded with identifier: ${ident}`);
 });
 
-// request body: { ident: str }
+// request body: { type: str, ident: str }
 router.post("/unload_model", async (req, res) => {
+  const type = req.body.type;
   const ident = req.body.ident;
-  if (lmManager.loaded_models[ident] === undefined)
-    return res.json(`Unloaded ${ident}`);
-  await lmManager.unload(ident);
+  await lmManager.unload(type, ident);
   return res.json(`Unloaded ${ident}`);
 });
