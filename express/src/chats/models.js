@@ -5,6 +5,7 @@ export class Message {
     this.content = content;
     this.chat_uuid = chat_uuid;
     this.date = date;
+    this.aborted = false;
   }
 }
 
@@ -27,6 +28,7 @@ export class Chat {
     this.model_ident = model_ident;
   };
 
+  // returns Promise<wss>
   stream = (messages) => {
     return this.model.respond(messages);
   };

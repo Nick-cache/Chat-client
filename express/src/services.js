@@ -5,7 +5,6 @@ import { Chat } from "./chats/models.js";
 
 class LmManager {
   client = new LMStudioClient();
-
   constructor() {
     this.models = {}; // { path: Model }
     this.loaded_models = {}; // ident : [model, info]
