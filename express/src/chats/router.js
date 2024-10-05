@@ -8,5 +8,6 @@ router.post("/create_chat", async (req, res) => {
   const name = req.body.name;
   const ident = req.body.ident;
   const model = lmManager.loaded_models[ident];
-  lmManager.createChat(name, model, ident);
+  const chat = lmManager.createChat(name, model, ident);
+  return res.json(chat);
 });

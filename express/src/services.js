@@ -1,7 +1,7 @@
 import SDK from "@lmstudio/sdk";
 const { LMStudioClient } = SDK;
 import { v4 as uuidv4 } from "uuid";
-import { Chat } from "./models.js";
+import { Chat } from "./chats/models.js";
 
 class LmManager {
   client = new LMStudioClient();
