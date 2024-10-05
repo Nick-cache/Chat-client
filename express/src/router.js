@@ -35,12 +35,8 @@ router.post("/unload_model", async (req, res) => {
 router.post("/create_chat", async (req, res) => {
   const name = req.body.name;
   const ident = req.body.ident;
-
-  lmManager.createChat();
+  const model = lmManager.loaded_models[ident];
+  lmManager.createChat(name, model, ident);
 });
 
 export default router;
-
-// kurvabober!@123sdawdacdsvaw
-// huianusprivet123
-// jioduz@heduu.com

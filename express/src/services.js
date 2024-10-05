@@ -9,8 +9,8 @@ class LmManager {
   constructor() {
     this.models = {}; // { path: Model }
     this.loaded_models = {}; // ident : [model, info]
-    // this.projects = {}; // p_uuid : project
     this.chats = {}; // c_uuid : chat
+    // this.projects = {}; // p_uuid : project
   }
 
   _fillLoadedModels = async () => {
@@ -56,16 +56,9 @@ class LmManager {
     delete this.loaded_models[ident];
   };
 
-  createChat = (name, model, model_ident, model_info, project_uuid = null) => {
+  createChat = (name, model, model_ident, project_uuid = null) => {
     const uuid = uuidv4();
-    const chat = new Chat(
-      uuid,
-      name,
-      model,
-      model_ident,
-      model_info,
-      project_uuid
-    );
+    const chat = new Chat(uuid, name, model, model_ident, project_uuid);
     this.chats[uuid] = chat;
     return chat;
   };
