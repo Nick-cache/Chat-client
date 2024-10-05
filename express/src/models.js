@@ -7,20 +7,6 @@ export class Message {
   }
 }
 
-export class LoadedModel {
-  constructor(model, ident) {
-    this.model = model;
-    this.ident = ident;
-  }
-}
-
-export class Model {
-  constructor(path, info) {
-    this.path = path;
-    this.info = info;
-  }
-}
-
 export class Chat {
   constructor(uuid, name, model, model_ident, model_info, project_uuid) {
     this.uuid = uuid; // str
