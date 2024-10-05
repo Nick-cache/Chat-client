@@ -28,7 +28,7 @@ export class Chat {
     this.model_ident = model_ident;
   };
 
-  // returns Promise<wss>
+  // returns Promise<ws>
   stream = (messages) => {
     return this.model.respond(messages);
   };
