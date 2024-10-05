@@ -15,7 +15,7 @@ class Message(BaseModel):
         unique=True,
         default=uuid4,
     )
-    role: Mapped[str] = mapped_column(String(100))
+    role: Mapped[str | None] = mapped_column(String(100), nullable=True)
     content: Mapped[str] = mapped_column(String(6000))
     tokens: Mapped[int] = mapped_column(Integer)
     date: Mapped[DateTime] = mapped_column(DateTime)
