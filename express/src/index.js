@@ -1,13 +1,13 @@
 import express from "express";
-import router from "./router.js";
+import { router as chats_router } from "./chats/router.js";
 import { lmManager } from "./services.js";
-import { router as llmodel_router } from "./llmodels/router.js";
+import { router as llmodels_router } from "./llmodels/router.js";
 const app = express();
 const port = 3000;
 
 app.use(express.json());
-app.use(router);
-app.use(llmodel_router);
+app.use(chats_router);
+app.use(llmodels_router);
 app.once("started", async () => {
   await lmManager.init();
 });

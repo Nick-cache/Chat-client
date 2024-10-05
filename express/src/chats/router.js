@@ -1,7 +1,7 @@
 import express from "express";
-import { lmManager } from "./services.js";
+import { lmManager } from "../services.js";
 
-const router = express.Router();
+export const router = express.Router();
 
 // request body: { name: str, ident: str }
 router.post("/create_chat", async (req, res) => {
@@ -10,5 +10,3 @@ router.post("/create_chat", async (req, res) => {
   const model = lmManager.loaded_models[ident];
   lmManager.createChat(name, model, ident);
 });
-
-export default router;
