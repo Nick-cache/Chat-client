@@ -2,13 +2,18 @@ import SDK from "@lmstudio/sdk";
 const { LMStudioClient } = SDK;
 import { v4 as uuidv4 } from "uuid";
 import { Chat } from "./chats/models.js";
+import axios from "axios";
+
+const innerApiInstance = axios.create({
+  baseURL: "http://localhost:8000",
+});
 
 class LmManager {
   client = new LMStudioClient();
   constructor() {
     this.models = {}; // { path: Model }
-    this.loaded_llms = {}; // ident : model
-    this.loaded_embeddings = {}; // ident : model
+    this.llm = {}; // ident : model
+    this.embedding = {}; // ident : model
     this.chats = {}; // c_uuid : chat
     // this.projects = {}; // p_uuid : project
   }
@@ -16,7 +21,7 @@ class LmManager {
   _fillLoadedLlms = async () => {
     const models = await this.client.llm.listLoaded();
     for await (const model of models) {
-      this.loaded_llms[model.identifier] = await this.client.llm.get({
+      this.llm[model.identifier] = await this.client.llm.get({
         identifier: model.identifier,
       });
     }
@@ -25,10 +30,9 @@ class LmManager {
   _fillLoadedEmbeddings = async () => {
     const models = await this.client.embedding.listLoaded();
     for await (const model of models) {
-      this.loaded_embeddings[model.identifier] =
-        await this.client.embedding.get({
-          identifier: model.identifier,
-        });
+      this.embedding[model.identifier] = await this.client.embedding.get({
+        identifier: model.identifier,
+      });
     }
   };
 
@@ -45,8 +49,8 @@ class LmManager {
     await this._fillLoadedEmbeddings();
   };
 
-  load = async (path, ident) => {
-    const model = await this.client.llm.load(path, {
+  load = async (path, type, ident) => {
+    const model = await this.client[type].load(path, {
       identifier: ident,
       config: {
         gpuOffload: {
@@ -56,13 +60,15 @@ class LmManager {
         },
       },
     });
-    this.loaded_models[ident] = model;
+    this[type][ident] = model;
     return model;
   };
 
-  unload = async (ident) => {
-    await this.client.llm.unload(ident);
-    delete this.loaded_models[ident];
+  unload = async (type, ident) => {
+    if (this[type][ident] !== undefined) {
+      await this.client[type].unload(ident);
+      delete this[type][ident];
+    }
   };
 
   createChat = (name, model, model_ident, project_uuid = null) => {
