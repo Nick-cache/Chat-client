@@ -1,5 +1,7 @@
+import {ChatApi} from "./services.js"
+
 export class Message {
-  constructor(uuid, content, chat_uuid, date, tokens, role = null) {
+  constructor(uuid, content, chat_uuid, date, tokens, role) {
     this.aborted = false;
     this.uuid = uuid;
     this.role = role;
@@ -19,7 +21,15 @@ export class Message {
 }
 
 export class Chat {
-  constructor(uuid, name, model, model_ident, project_uuid) {
+  constructor(
+    uuid,
+    name,
+    model,
+    model_ident,
+    project_uuid,
+    api_uri,
+    headers,
+  ) {
     this.uuid = uuid; // str
     this.name = name; // str
     this.model = model; // model
@@ -27,6 +37,7 @@ export class Chat {
     this.project_uuid = project_uuid; // str
     this.messages = {}; // {uuid: Message}
     this.tokens = 0;
+    this.api = new ChatApi(uuid, api_uri, headers)
   }
 
   requestBody = () => {
