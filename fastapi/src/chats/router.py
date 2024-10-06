@@ -6,7 +6,6 @@ from src.chats.services import ChatDal, MessageDal
 from src.chats.schemas import (
     ChatSaveSchema,
     ChatResponseSchema,
-    MessageSchema,
     MessageResponseSchema,
     MessagesDeleteSchema,
 )
@@ -24,15 +23,8 @@ async def save_chat(
     payload: ChatSaveSchema,
     session: session_dep,
 ):
-    chat_data = payload.model_dump()
-    messages_data = chat_data["messages"]
-    del chat_data["messages"]
     chat = await ChatDal.create(
-        chat_data,
-        session=session,
-    )
-    await MessageDal.insert_rows(
-        payload=messages_data,
+        payload.model_dump(),
         session=session,
     )
     await session.refresh(chat)
@@ -50,7 +42,7 @@ async def get_all_chats(session: session_dep):
 @chat_router.put("/add_messages")
 @to_http_exception(CHAT_EXCEPTIONS)
 async def add_messages_in_chat(
-    payload: list[MessageSchema],
+    payload: list[MessageResponseSchema],
     session: session_dep,
 ):
     await MessageDal.insert_rows(
@@ -62,7 +54,7 @@ async def add_messages_in_chat(
 @chat_router.put("/update_messages")
 @to_http_exception(CHAT_EXCEPTIONS)
 async def update_messages(
-    payload: list[MessageSchema],
+    payload: list[MessageResponseSchema],
     session: session_dep,
 ):
     await MessageDal.update_rows(payload=payload, session=session)
@@ -87,6 +79,12 @@ async def get_chat(uuid: UUID4, session: session_dep):
         ident=ident,
         session=session,
     )
+
+
+@chat_router.get("{uuid}/messages", response_model=list[MessageResponseSchema],)
+async def get_chat_messages(uuid: UUID4, session: session_dep):
+    payload = {"chat_uuid": uuid}
+    return MessageDal.get_all(session=session, payload=payload)    
 
 
 @chat_router.delete("/{uuid}")
