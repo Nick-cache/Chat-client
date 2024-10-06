@@ -12,13 +12,11 @@ class ChatSchema(BaseSchema):
     uuid: UUID4
     name: str
     tokens: int
-    messages: list[MessageSchema]
     project_uuid: UUID4 | None = None
 
 
 class ChatSaveSchema(ChatSchema):
     pass
-
 
 class ChatResponseSchema(ChatSaveSchema):
     pass
@@ -27,7 +25,7 @@ class ChatResponseSchema(ChatSaveSchema):
 # ! MESSAGES
 class MessageSchema(BaseSchema):
     uuid: UUID4
-    role: str | None = None
+    role: str
     content: str
     tokens: int
     date: datetime
