@@ -2,11 +2,6 @@ import SDK from "@lmstudio/sdk";
 const { LMStudioClient } = SDK;
 import { v4 as uuidv4 } from "uuid";
 import { Chat } from "./chats/models.js";
-import axios from "axios";
-
-const innerApiInstance = axios.create({
-  baseURL: "http://localhost:8000",
-});
 
 class LmManager {
   client = new LMStudioClient();
@@ -56,10 +51,11 @@ class LmManager {
     await this._fillLoadedEmbeddings();
   };
 
-  load = async (path, type, ident) => {
+  load = async (path, type, ident, contextLength) => {
     const model = await this.client[type].load(path, {
       identifier: ident,
       config: {
+        contextLength: contextLength,
         gpuOffload: {
           ratio: 1,
           mainGpu: 1,
@@ -67,8 +63,8 @@ class LmManager {
         },
       },
     });
-    this[type][ident] = model;
-    return model;
+    this[type][model.identifier] = model;
+    return model.identifier;
   };
 
   unload = async (type, ident) => {
@@ -88,3 +84,10 @@ class LmManager {
 }
 
 export const lmManager = new LmManager();
+
+// This class should describe default socket interface
+// Will be emmited in Chat namespace
+// class SocketInteraction {}
+
+// Helper function which creates namespace and init SocketInteraction
+// function create_namespace() {}
