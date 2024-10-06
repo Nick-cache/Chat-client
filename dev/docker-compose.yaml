@@ -46,6 +46,18 @@ services:
     ports: !reset []
     command: bash -c "find /app/src test | entr -n pytest test"
 
+  express:
+    container_name: ${EXPRESS_SERVICE}
+    build:
+      context: ../
+      dockerfile: ./dev/express/Dockerfile
+    volumes:
+      - ../express/src:/app/src
+    ports:
+      - "${EXPRESS_PORT}:${EXPRESS_PORT}"
+    command: npx nodemon /app/src/index.js
+    network_mode: host
+
   # redis:
   #   container_name: ${REDIS_SERVICE}
   #   build: ./redis
