@@ -11,11 +11,11 @@ const port = 3000;
 app.use(express.json());
 app.use(chats_router);
 app.use(llmodels_router);
-app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.once("started", async () => {
   await lmManager.init();
 });
 app.listen(port, () => {
-  console.log(`http://localhost:${port}`);
+  console.log(`http://localhost:${port}/docs`);
   app.emit("started");
 });
