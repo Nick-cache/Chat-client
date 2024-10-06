@@ -9,8 +9,8 @@ router.get("/list_models", async (req, res) => {
 
 router.get("/list_loaded_models", async (req, res) => {
   const models = {
-    Llms: lmManager.loaded_llms,
-    Embeddings: lmManager.loaded_embeddings,
+    Llms: lmManager.llm,
+    Embeddings: lmManager.embedding,
   };
   return res.json(models);
 });

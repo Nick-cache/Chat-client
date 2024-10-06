@@ -18,6 +18,13 @@ class LmManager {
     // this.projects = {}; // p_uuid : project
   }
 
+  get loaded_models() {
+    return {
+      ...this.llm,
+      ...this.embedding,
+    };
+  }
+
   _fillLoadedLlms = async () => {
     const models = await this.client.llm.listLoaded();
     for await (const model of models) {
