@@ -17,7 +17,6 @@ class Message(BaseModel):
     )
     role: Mapped[str] = mapped_column(String(100))
     content: Mapped[str] = mapped_column(Text)
-    tokens: Mapped[int] = mapped_column(Integer)
     date: Mapped[DateTime] = mapped_column(DateTime)
     chat_uuid: Mapped[UUID] = mapped_column(
         ForeignKey(

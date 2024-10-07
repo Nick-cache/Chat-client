@@ -27,7 +27,6 @@ class MessageSchema(BaseSchema):
     uuid: UUID4
     role: str
     content: str
-    tokens: int
     date: datetime
     chat_uuid: UUID4
 

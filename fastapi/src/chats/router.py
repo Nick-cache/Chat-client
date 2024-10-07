@@ -66,8 +66,8 @@ async def delete_messages(
     payload: MessagesDeleteSchema,
     session: session_dep,
 ):
-    await MessageDal.delete_messages_by_ids(
-        ids=payload.uuids,
+    await MessageDal.delete_messages_by_uuids(
+        uuids=payload.uuids,
         session=session,
     )
 

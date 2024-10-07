@@ -13,9 +13,9 @@ class MessageDal(Dal):
     model = Message
 
     @classmethod
-    async def delete_messages_by_ids(
+    async def delete_messages_by_uuids(
         cls,
-        ids: list[UUID4],
+        uuids: list[UUID4],
         session: AsyncSession,
     ):
         await session.execute(delete(Message).filter(Message.uuid.in_(ids)))
