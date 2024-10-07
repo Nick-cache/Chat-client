@@ -33,7 +33,7 @@ class MessageSchema(BaseSchema):
 
 
 class MessagesDeleteSchema(BaseSchema):
-    ids: list[UUID4]
+    uuids: list[UUID4]
 
 
 class MessageResponseSchema(MessageSchema):

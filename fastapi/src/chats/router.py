@@ -15,11 +15,11 @@ chat_router = APIRouter(prefix="/chats", tags=["chats"])
 
 
 @chat_router.post(
-    "/save_chat",
+    "/create_chat",
     response_model=ChatResponseSchema,
 )
 @to_http_exception(CHAT_EXCEPTIONS)
-async def save_chat(
+async def create_chat(
     payload: ChatSaveSchema,
     session: session_dep,
 ):
@@ -67,7 +67,7 @@ async def delete_messages(
     session: session_dep,
 ):
     await MessageDal.delete_messages_by_ids(
-        ids=payload.ids,
+        ids=payload.uuids,
         session=session,
     )
 
@@ -81,10 +81,10 @@ async def get_chat(uuid: UUID4, session: session_dep):
     )
 
 
-@chat_router.get("{uuid}/messages", response_model=list[MessageResponseSchema],)
+@chat_router.get("/{uuid}/messages", response_model=list[MessageResponseSchema],)
 async def get_chat_messages(uuid: UUID4, session: session_dep):
     payload = {"chat_uuid": uuid}
-    return MessageDal.get_all(session=session, payload=payload)    
+    return await MessageDal.get_all(session=session, payload=payload)    
 
 
 @chat_router.delete("/{uuid}")
