@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "My API",
-    "description": "Description",
-    "version": "1.0.0"
+    "title": "Express API",
+    "version": "1.0.0",
+    "description": ""
   },
   "host": "localhost:3000",
   "basePath": "/",
@@ -22,10 +22,10 @@
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "example": "string"
                 },
                 "ident": {
-                  "example": "any"
+                  "example": "string"
                 }
               }
             }
@@ -58,7 +58,7 @@
               "type": "object",
               "properties": {
                 "messages": {
-                  "example": "any"
+                  "example": "[{role: string, content: string}]"
                 }
               }
             }
@@ -102,13 +102,16 @@
               "type": "object",
               "properties": {
                 "path": {
-                  "example": "any"
+                  "example": "string"
                 },
                 "type": {
-                  "example": "any"
+                  "example": "string"
+                },
+                "contentLength": {
+                  "example": "number"
                 },
                 "ident": {
-                  "example": "any"
+                  "example": "string"
                 }
               }
             }
@@ -132,10 +135,10 @@
               "type": "object",
               "properties": {
                 "type": {
-                  "example": "any"
+                  "example": "string"
                 },
                 "ident": {
-                  "example": "any"
+                  "example": "string"
                 }
               }
             }

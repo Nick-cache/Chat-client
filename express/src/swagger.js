@@ -2,10 +2,9 @@ import swaggerAutogen from "swagger-autogen";
 
 const doc = {
   info: {
-    title: "My API",
-    description: "Description",
+    title: "Express API",
   },
-  host: "localhost:3000",
+  host: "http://localhost:3000",
 };
 
 const outputFile = "./swagger-output.json";
