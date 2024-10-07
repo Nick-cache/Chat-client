@@ -30,9 +30,9 @@ class TestChats:
         "messages": messages,
     }
 
-    def test_save_chat(self, test_app: TestClient):
+    def test_create_chat(self, test_app: TestClient):
         response = test_app.post(
-            url="/chats/save_chat/",
+            url="/chats/create_chat/",
             json=self.chat,
         )
         assert response.status_code == 200
@@ -70,7 +70,7 @@ class TestChats:
         )
         assert response.status_code == 200
 
-    def test_cant_save_chat_with_fake_messages(self, test_app: TestClient):
+    def test_cant_create_chat_with_fake_messages(self, test_app: TestClient):
         chat = self.chat
         chat["messages"] = [
             {
@@ -91,7 +91,7 @@ class TestChats:
             },
         ]
         response = test_app.post(
-            url="/chats/save_chat/",
+            url="/chats/create_chat/",
             json=chat,
         )
         assert response.status_code == 422
