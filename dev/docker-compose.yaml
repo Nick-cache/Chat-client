@@ -1,15 +1,24 @@
 services:
   postgres:
     container_name: ${POSTGRES_SERVICE}
-    image: postgres:15.1-alpine
+    build:
+      context: ../
+      dockerfile: ./dev/postgresql/Dockerfile
+#    image: postgres:15.1-alpine
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+#    command:
+#      -  "postgres"
+#      -  "-c"
+#      -  "shared_buffers=128kB"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
       - POSTGRES_DB
       - POSTGRES_PORT
-  
+
   fastapi:
     container_name: ${FASTAPI_SERVICE}
     build:
@@ -36,15 +45,15 @@ services:
     depends_on:
       - ${POSTGRES_SERVICE}
 
-  fastapi-test:
-    extends: fastapi
-    container_name: "${FASTAPI_SERVICE}-test"
-    build:
-      dockerfile: ./dev/test/Dockerfile
-    volumes:
-      - ../fastapi/src:/app/src
-    ports: !reset []
-    command: bash -c "find /app/src test | entr -n pytest test"
+  # fastapi-test:
+  #   extends: fastapi
+  #   container_name: "${FASTAPI_SERVICE}-test"
+  #   build:
+  #     dockerfile: ./dev/test/Dockerfile
+  #   volumes:
+  #     - ../fastapi/src:/app/src
+  #   ports: !reset []
+  #   command: bash -c "find /app/src test | entr -n pytest test"
 
   express:
     container_name: ${EXPRESS_SERVICE}
@@ -68,3 +77,5 @@ services:
   #     interval: 1s
   #     timeout: 3s
   #     retries: 5
+volumes:
+  pgdata:
