@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, ForeignKey, Integer, DateTime
+from sqlalchemy import String, ForeignKey, Integer, DateTime, Text
 from typing import Optional
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
@@ -16,7 +16,7 @@ class Message(BaseModel):
         default=uuid4,
     )
     role: Mapped[str] = mapped_column(String(100))
-    content: Mapped[str] = mapped_column(String(6000))
+    content: Mapped[str] = mapped_column(Text)
     tokens: Mapped[int] = mapped_column(Integer)
     date: Mapped[DateTime] = mapped_column(DateTime)
     chat_uuid: Mapped[UUID] = mapped_column(
