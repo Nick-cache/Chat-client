@@ -7,13 +7,14 @@
   },
   "host": "localhost:3000",
   "basePath": "/",
-  "schemes": [
-    "http"
-  ],
+  "schemes": ["http"],
   "paths": {
     "/create_chat": {
       "post": {
-        "description": "",
+        "tags": [
+          "chats"
+        ],
+        "summary": "Create Chat",
         "parameters": [
           {
             "name": "body",
@@ -22,10 +23,10 @@
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "string"
+                  "example": "chat name"
                 },
                 "ident": {
-                  "example": "string"
+                  "example": "identifier"
                 }
               }
             }
@@ -33,9 +34,22 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "uuid": "hex num",
+                  "name": "chat name",
+                  "model": "{...model data}",
+                  "model_ident": "identifier",
+                  "project_uuid": "hex num",
+                  "tokens": 0 
+                }
+              }
+            }
           },
           "404": {
+            "example": "No model loaded with this identifier",
             "description": "Not Found"
           }
         }
@@ -57,8 +71,11 @@
             "schema": {
               "type": "object",
               "properties": {
-                "messages": {
-                  "example": "[{role: string, content: string}]"
+                "promt": {
+                  "example": {
+                    "role": "user",
+                    "content": "string"
+                  }
                 }
               }
             }
@@ -105,13 +122,13 @@
                   "example": "string"
                 },
                 "type": {
-                  "example": "string"
+                  "example": "llm"
                 },
                 "contentLength": {
-                  "example": "number"
+                  "example": 32000
                 },
                 "ident": {
-                  "example": "string"
+                  "example": "identifier"
                 }
               }
             }
@@ -135,10 +152,10 @@
               "type": "object",
               "properties": {
                 "type": {
-                  "example": "string"
+                  "example": "llm"
                 },
                 "ident": {
-                  "example": "string"
+                  "example": "identifier"
                 }
               }
             }

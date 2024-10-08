@@ -19,7 +19,7 @@ router.get("/list_loaded_models", async (req, res) => {
 router.post("/load_model", async (req, res) => {
   const path = req.body.path;
   const type = req.body.type;
-  const contentLength = Number(req.body.contentLength)
+  const contentLength = Number(req.body.contentLength);
   let ident = req.body.ident;
   ident = await lmManager.load(path, type, ident, contentLength);
   return res.json(`Loaded with identifier: ${ident}`);

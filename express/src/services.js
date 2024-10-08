@@ -71,7 +71,6 @@ class LmManager {
       delete this[type][ident];
     }
   };
-
 }
 
 export const lmManager = new LmManager();

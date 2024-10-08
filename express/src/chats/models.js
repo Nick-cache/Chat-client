@@ -1,11 +1,7 @@
+import { v4 as uuidv4 } from "uuid";
+
 export class Chat {
-  constructor(
-    uuid,
-    name,
-    model,
-    model_ident,
-    project_uuid = null,
-  ) {
+  constructor(uuid, name, model, model_ident, project_uuid = null) {
     this.uuid = uuid; // str
     this.name = name; // str
     this.model = model; // model
@@ -14,12 +10,26 @@ export class Chat {
     this.tokens = 0;
   }
 
-  get requestBody () {
+  get requestBody() {
     return {
       uuid: this.uuid,
       name: this.name,
       tokens: this.tokens,
       project_uuid: this.project_uuid,
+    };
+  }
+
+  toMessageSchema = (
+    role,
+    content,
+    date = new Date().toJSON().slice(0, -5)
+  ) => {
+    return {
+      uuid: uuidv4(),
+      role: role,
+      content: content,
+      date: date,
+      chat_uuid: this.uuid,
     };
   };
 
