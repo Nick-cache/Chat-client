@@ -5,16 +5,15 @@
     "version": "1.0.0",
     "description": ""
   },
-  "host": "localhost:3000",
+  "host": "http://localhost:3000",
   "basePath": "/",
-  "schemes": ["http"],
+  "schemes": [
+    "http"
+  ],
   "paths": {
     "/create_chat": {
       "post": {
-        "tags": [
-          "chats"
-        ],
-        "summary": "Create Chat",
+        "description": "",
         "parameters": [
           {
             "name": "body",
@@ -23,10 +22,10 @@
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "chat name"
+                  "example": "any"
                 },
                 "ident": {
-                  "example": "identifier"
+                  "example": "any"
                 }
               }
             }
@@ -34,28 +33,15 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "uuid": "hex num",
-                  "name": "chat name",
-                  "model": "{...model data}",
-                  "model_ident": "identifier",
-                  "project_uuid": "hex num",
-                  "tokens": 0 
-                }
-              }
-            }
+            "description": "OK"
           },
           "404": {
-            "example": "No model loaded with this identifier",
             "description": "Not Found"
           }
         }
       }
     },
-    "/chat/{uuid}": {
+    "/chat/{uuid}/respond": {
       "post": {
         "description": "",
         "parameters": [
@@ -72,10 +58,7 @@
               "type": "object",
               "properties": {
                 "promt": {
-                  "example": {
-                    "role": "user",
-                    "content": "string"
-                  }
+                  "example": "any"
                 }
               }
             }
@@ -84,6 +67,30 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/chat/{uuid}/resume": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -119,16 +126,16 @@
               "type": "object",
               "properties": {
                 "path": {
-                  "example": "string"
+                  "example": "any"
                 },
                 "type": {
-                  "example": "llm"
+                  "example": "any"
                 },
                 "contentLength": {
-                  "example": 32000
+                  "example": "any"
                 },
                 "ident": {
-                  "example": "identifier"
+                  "example": "any"
                 }
               }
             }
@@ -152,10 +159,10 @@
               "type": "object",
               "properties": {
                 "type": {
-                  "example": "llm"
+                  "example": "any"
                 },
                 "ident": {
-                  "example": "identifier"
+                  "example": "any"
                 }
               }
             }
