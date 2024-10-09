@@ -1,12 +1,19 @@
 import express from "express";
-import { router as chats_router } from "./chats/router.js";
-import { lmManager } from "./services.js";
-import { router as llmodels_router } from "./llmodels/router.js";
+import { Server } from "socket.io";
+import { createServer } from "http";
 import swaggerUi from "swagger-ui-express";
+
+import { lmManager } from "./services.js";
+import { chatInputSocketEvents } from "./chats/socket.js";
+import { router as chats_router } from "./chats/router.js";
+import { router as llmodels_router } from "./llmodels/router.js";
 import swaggerFile from "./swagger-output.json" assert { type: "json" };
 
-const app = express();
 const port = 3000;
+
+const httpServer = createServer();
+const app = express(httpServer);
+const io = new Server(httpServer);
 
 app.use(express.json());
 app.use(chats_router);
