@@ -18,6 +18,7 @@ class ChatSchema(BaseSchema):
 class ChatSaveSchema(ChatSchema):
     pass
 
+
 class ChatResponseSchema(ChatSaveSchema):
     pass
 
@@ -29,6 +30,7 @@ class MessageSchema(BaseSchema):
     content: str
     date: datetime
     chat_uuid: UUID4
+    stopped: bool
 
 
 class MessagesDeleteSchema(BaseSchema):

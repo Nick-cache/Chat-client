@@ -24,7 +24,7 @@ class Message(BaseModel):
             ondelete="CASCADE",
         )
     )
-    stopped: Mapped[bool] = mapped_column(Boolean)
+    stopped: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
 class Chat(BaseModel):
