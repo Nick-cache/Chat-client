@@ -22,6 +22,7 @@ export class Chat {
   toMessageSchema = (
     role,
     content,
+    stopped,
     date = new Date().toJSON().slice(0, -5)
   ) => {
     return {
@@ -30,6 +31,7 @@ export class Chat {
       content: content,
       date: date,
       chat_uuid: this.uuid,
+      stopped: stopped,
     };
   };
 
@@ -42,9 +44,8 @@ export class Chat {
     this.model_ident = model_ident;
   };
 
-  // returns Promise<ws>
-  stream = (messages) => {
-    return this.model.respond(messages);
+  stream = (messages, opts = null) => {
+    return this.model.respond(messages, opts);
   };
 
   // addMessage = async () => {

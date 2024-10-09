@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, ForeignKey, Integer, DateTime, Text
+from sqlalchemy import String, ForeignKey, Integer, DateTime, Text, Boolean
 from typing import Optional
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
@@ -24,6 +24,7 @@ class Message(BaseModel):
             ondelete="CASCADE",
         )
     )
+    stopped: Mapped[bool] = mapped_column(Boolean)
 
 
 class Chat(BaseModel):
