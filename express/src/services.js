@@ -21,18 +21,24 @@ class LmManager {
   _fillLoadedLlms = async () => {
     const models = await this.client.llm.listLoaded();
     for await (const model of models) {
-      this.llm[model.identifier] = await this.client.llm.get({
+      const ac = new AbortController();
+      const res = await this.client.llm.get({
         identifier: model.identifier,
       });
+      res.stop = () => ac.abort();
+      this.llm[model.identifier] = res;
     }
   };
 
   _fillLoadedEmbeddings = async () => {
     const models = await this.client.embedding.listLoaded();
     for await (const model of models) {
-      this.embedding[model.identifier] = await this.client.embedding.get({
+      const ac = new AbortController();
+      const res = await this.client.embedding.get({
         identifier: model.identifier,
       });
+      res.stop = () => ac.abort();
+      this.embedding[model.identifier] = res;
     }
   };
 
@@ -50,6 +56,7 @@ class LmManager {
   };
 
   load = async (path, type, ident, contextLength) => {
+    const ac = new AbortController();
     const model = await this.client[type].load(path, {
       identifier: ident,
       config: {
@@ -60,7 +67,9 @@ class LmManager {
           tensorSplit: [1, 0],
         },
       },
+      signal: ac.signal,
     });
+    model.stop = () => ac.abort();
     this[type][model.identifier] = model;
     return model.identifier;
   };
@@ -74,6 +83,12 @@ class LmManager {
 }
 
 export const lmManager = new LmManager();
+
+// export const addSocketEvents = (socket, events) => {
+// for (const [_, event] of events.entries()) {
+// socket.addListener(event.name, event.func);
+// }
+// };
 
 // This class should describe default socket interface
 // Will be emmited in Chat namespace
