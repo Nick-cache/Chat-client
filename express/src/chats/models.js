@@ -23,7 +23,7 @@ export class Chat {
     role,
     content,
     stopped,
-    date = new Date().toJSON().slice(0, -5)
+    date = new Date().toJSON().slice(0, -1)
   ) => {
     return {
       uuid: uuidv4(),
