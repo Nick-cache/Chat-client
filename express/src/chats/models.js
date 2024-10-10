@@ -7,7 +7,7 @@ export class Chat {
     this.model = model; // model
     this.model_ident = model_ident; // str
     this.project_uuid = project_uuid; // str
-    this.tokens = 0;
+    this.tokens = 0; // num
   }
 
   get requestBody() {
@@ -44,16 +44,7 @@ export class Chat {
     this.model_ident = model_ident;
   };
 
-  stream = (messages, opts = null) => {
-    return this.model.respond(messages, opts);
+  stream = (messages) => {
+    return this.model.respond(messages);
   };
-
-  // addMessage = async () => {
-  //   OrmAdd
-  //   RedisAdd
-  // }
-
-  // getHistory = async () => {
-  //   RedisGet or OrmGet
-  // }
 }
