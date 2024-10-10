@@ -8,16 +8,24 @@ class ChatWebApi {
     });
   }
 
-  save_chat = async (data) => {
-    return await this.instance.post("/create_chat", data);
+  save_chat = async (chat) => {
+    return await this.instance.post("/create_chat", chat);
+  };
+
+  update_chat_name = async (uuid, name) => {
+    await this.instance.put(`/${uuid}`, { name: name });
+  };
+
+  get_messages = async (uuid) => {
+    return await this.instance.get(`/${uuid}/messages`);
   };
 
   add_messages = async (messages) => {
     await this.instance.put("/add_messages", messages);
   };
 
-  get_messages = async (uuid) => {
-    return await this.instance.get(`/${uuid}/messages`);
+  update_mesages = async (messages) => {
+    return await this.instance.put("/update_messages", messages);
   };
 }
 
