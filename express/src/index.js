@@ -3,8 +3,7 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import swaggerUi from "swagger-ui-express";
 
-import { lmManager } from "./services.js";
-import { chatInputSocketEvents } from "./chats/socket.js";
+import { lmManager } from "./llmodels/services.js";
 import { router as chats_router } from "./chats/router.js";
 import { router as llmodels_router } from "./llmodels/router.js";
 import swaggerFile from "./swagger-output.json" assert { type: "json" };
