@@ -19,6 +19,10 @@ class ChatSaveSchema(ChatSchema):
     pass
 
 
+class ChatUpdateSchema(BaseSchema):
+    name: str
+
+
 class ChatResponseSchema(ChatSaveSchema):
     pass
 
