@@ -1,5 +1,5 @@
 import express from "express";
-import { lmManager } from "../services.js";
+import { lmManager } from "./services.js";
 
 export const router = express.Router();
 
@@ -21,7 +21,7 @@ router.post("/load_model", async (req, res) => {
   const type = req.body.type;
   const contentLength = Number(req.body.contentLength);
   let ident = req.body.ident;
-  ident = await lmManager.load(path, type, ident, contentLength);
+  ident = await lmManager.load(path, type, ident, contentLength, req.socket);
   return res.json(`Loaded with identifier: ${ident}`);
 });
 
