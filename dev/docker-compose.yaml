@@ -67,6 +67,16 @@ services:
     command: npx nodemon /app/src/index.js
     network_mode: host
 
+  vite:
+    container_name: vite
+    build: 
+      context: ../
+      dockerfile: ./dev/vite/Dockerfile
+    volumes:
+      - ../vite/src:/app/src
+    ports:
+      - "${VITE_PORT}:${VITE_PORT}"
+
   # redis:
   #   container_name: ${REDIS_SERVICE}
   #   build: ./redis
