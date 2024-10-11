@@ -41,6 +41,72 @@
         }
       }
     },
+    "/chat/{uuid}/change_name": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/chat/{uuid}/change_model": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ident": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/chat/{uuid}/respond": {
       "post": {
         "description": "",
@@ -57,7 +123,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "promt": {
+                "messages": {
                   "example": "any"
                 }
               }
@@ -75,7 +141,7 @@
       }
     },
     "/chat/{uuid}/resume": {
-      "post": {
+      "put": {
         "description": "",
         "parameters": [
           {
@@ -83,6 +149,21 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "messages": {
+                  "example": "any"
+                },
+                "resume": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
