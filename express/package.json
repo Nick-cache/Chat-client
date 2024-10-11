@@ -4,6 +4,7 @@
     "@lmstudio/sdk": "^0.1.0",
     "axios": "^1.7.7",
     "express": "^4.21.0",
+    "socket.io": "^4.8.0",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^10.0.0"
   },
