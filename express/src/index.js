@@ -2,6 +2,7 @@ import express from "express";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import swaggerUi from "swagger-ui-express";
+import cors from "cors";
 
 import { lmManager } from "./llmodels/services.js";
 import { router as chats_router } from "./chats/router.js";
@@ -14,6 +15,7 @@ const httpServer = createServer();
 const app = express(httpServer);
 const io = new Server(httpServer);
 
+app.use(cors({ origin: ["http://localhost:5173"] }));
 app.use(express.json());
 app.use(chats_router);
 app.use(llmodels_router);
