@@ -12,6 +12,7 @@ class TestChats:
             "content": "Lorem Ipsum",
             "date": datetime.now().__str__(),
             "chat_uuid": chat_uuid,
+            "stopped": False,
         },
         {
             "uuid": uuid4().hex,
@@ -19,13 +20,13 @@ class TestChats:
             "content": "Lorem Ipsum sisdqwdfewfwfwqjwefpoiqwefqweifjoqwifjqwofjweijfowjfewojwefjweoifjwofjwofjwfwoo",
             "date": (datetime.now() + timedelta(minutes=1)).__str__(),
             "chat_uuid": chat_uuid,
+            "stopped": False,
         },
     ]
     chat = {
         "uuid": chat_uuid,
         "name": "new_chat",
         "tokens": 100,
-        "messages": messages,
     }
 
     def test_create_chat(self, test_app: TestClient):
@@ -51,6 +52,7 @@ class TestChats:
                 "content": "New message",
                 "date": datetime.now().__str__(),
                 "chat_uuid": self.chat_uuid,
+                "stopped": False,
             },
             {
                 "uuid": uuid4().hex,
@@ -58,6 +60,7 @@ class TestChats:
                 "content": "New message",
                 "date": (datetime.now() + timedelta(minutes=1)).__str__(),
                 "chat_uuid": self.chat_uuid,
+                "stopped": False,
             },
         ]
         response = test_app.put(
@@ -75,6 +78,7 @@ class TestChats:
                 "content": "New Fake",
                 "date": datetime.now().__str__(),
                 "chat_uuid": uuid4().hex,
+                "stopped": False,
             },
             {
                 "uuid": uuid4().hex,
@@ -82,6 +86,7 @@ class TestChats:
                 "content": "New Fake",
                 "date": (datetime.now() + timedelta(minutes=1)).__str__(),
                 "chat_uuid": uuid4().hex,
+                "stopped": False,
             },
         ]
         response = test_app.post(
@@ -98,6 +103,7 @@ class TestChats:
                 "content": "Fake",
                 "date": datetime.now().__str__(),
                 "chat_uuid": uuid4().hex,
+                "stopped": False,
             },
             {
                 "uuid": uuid4().hex,
@@ -105,6 +111,7 @@ class TestChats:
                 "content": "Fake",
                 "date": (datetime.now() + timedelta(minutes=1)).__str__(),
                 "chat_uuid": uuid4().hex,
+                "stopped": False,
             },
         ]
         response = test_app.put(
@@ -121,6 +128,7 @@ class TestChats:
                 "content": "Fake Updated",
                 "date": datetime.now().__str__(),
                 "chat_uuid": uuid4().hex,
+                "stopped": False,
             },
             {
                 "uuid": uuid4().hex,
@@ -128,6 +136,7 @@ class TestChats:
                 "content": "Fake Updated",
                 "date": (datetime.now() + timedelta(minutes=1)).__str__(),
                 "chat_uuid": uuid4().hex,
+                "stopped": False,
             },
         ]
         response = test_app.put(
