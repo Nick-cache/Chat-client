@@ -1,66 +1,66 @@
 services:
-  # postgres:
-  #   container_name: ${POSTGRES_SERVICE}
-  #   build:
-  #     context: ../
-  #     dockerfile: ./dev/postgresql/Dockerfile
-  #   volumes:
-  #     - pgdata:/var/lib/postgresql/data
-  #   ports:
-  #     - "${POSTGRES_PORT}:${POSTGRES_PORT}"
-  #   environment:
-  #     - POSTGRES_USER
-  #     - POSTGRES_PASSWORD
-  #     - POSTGRES_DB
-  #     - POSTGRES_PORT
+  postgres:
+    container_name: ${POSTGRES_SERVICE}
+    build:
+      context: ../
+      dockerfile: ./dev/postgresql/Dockerfile
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_PORT
 
-  # fastapi:
-  #   container_name: ${FASTAPI_SERVICE}
-  #   build:
-  #     context: ../
-  #     dockerfile: ./dev/fastapi/Dockerfile
-  #   ports:
-  #     - "${FASTAPI_PORT}:${FASTAPI_PORT}"
-  #   volumes:
-  #     - ../fastapi/src:/app/src
-  #   environment:
-  #     - FASTAPI_HOST
-  #     - FASTAPI_PORT
-  #     - FASTAPI_RELOAD
-  #     - FASTAPI_WORKERS
-  #     - POSTGRES_URI
-  #     - REDIS_HOST
-  #     - REDIS_PORT
-  #     - REDIS_BROKER
-  #     - REDIS_CACHE
-  #     - TIMEZONE
-  #     - PYTHONUNBUFFERED=1
-  #     - PYTHONDONTWRITEBYTECODE=1
-  #     - PYTHONPATH=/app
-  #   depends_on:
-  #     - ${POSTGRES_SERVICE}
+  fastapi:
+    container_name: ${FASTAPI_SERVICE}
+    build:
+      context: ../
+      dockerfile: ./dev/fastapi/Dockerfile
+    ports:
+      - "${FASTAPI_PORT}:${FASTAPI_PORT}"
+    volumes:
+      - ../fastapi/src:/app/src
+    environment:
+      - FASTAPI_HOST
+      - FASTAPI_PORT
+      - FASTAPI_RELOAD
+      - FASTAPI_WORKERS
+      - POSTGRES_URI
+      - REDIS_HOST
+      - REDIS_PORT
+      - REDIS_BROKER
+      - REDIS_CACHE
+      - TIMEZONE
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONPATH=/app
+    depends_on:
+      - ${POSTGRES_SERVICE}
 
-  # fastapi-test:
-  #   extends: fastapi
-  #   container_name: "${FASTAPI_SERVICE}-test"
-  #   build:
-  #     dockerfile: ./dev/test/Dockerfile
-  #   volumes:
-  #     - ../fastapi/src:/app/src
-  #   ports: !reset []
-  #   command: bash -c "find /app/src test | entr -n pytest test"
+  fastapi-test:
+    extends: fastapi
+    container_name: "${FASTAPI_SERVICE}-test"
+    build:
+      dockerfile: ./dev/test/Dockerfile
+    volumes:
+      - ../fastapi/src:/app/src
+    ports: !reset []
+    command: bash -c "find /app/src test | entr -n pytest test"
 
-  # express:
-  #   container_name: ${EXPRESS_SERVICE}
-  #   build:
-  #     context: ../
-  #     dockerfile: ./dev/express/Dockerfile
-  #   volumes:
-  #     - ../express/src:/app/src
-  #   ports:
-  #     - "${EXPRESS_PORT}:${EXPRESS_PORT}"
-  #   command: npx nodemon /app/src/index.js
-  #   network_mode: host
+  express:
+    container_name: ${EXPRESS_SERVICE}
+    build:
+      context: ../
+      dockerfile: ./dev/express/Dockerfile
+    volumes:
+      - ../express/src:/app/src
+    ports:
+      - "${EXPRESS_PORT}:${EXPRESS_PORT}"
+    command: npx nodemon /app/src/index.js
+    network_mode: host
 
   vite:
     container_name: vite
