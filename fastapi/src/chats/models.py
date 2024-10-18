@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, ForeignKey, Integer, DateTime, Text, Boolean
-from typing import Optional
-from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
+from typing import Optional
+
+from sqlalchemy import String, ForeignKey, Integer, DateTime, Text, Boolean
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID
+
 from src.database import BaseModel
 
 
@@ -36,5 +38,5 @@ class Chat(BaseModel):
     )
     name: Mapped[str] = mapped_column(String(100))
     tokens: Mapped[int] = mapped_column(Integer)
-    messages: Mapped[list["Message"]] = relationship(lazy="joined")
+    messages: Mapped[list["Message"]] = relationship()
     project_uuid: Mapped[Optional[UUID]] = mapped_column(ForeignKey("project.uuid"))
