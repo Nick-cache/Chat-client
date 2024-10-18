@@ -1,8 +1,11 @@
 from fastapi.routing import APIRouter
+from pydantic import UUID4
+
 from src.database import session_dep
-from src.services import to_http_exception
+from src.utils import to_http_exception
+
 from src.chats.exceptions import CHAT_EXCEPTIONS
-from src.chats.services import ChatDal, MessageDal
+from src.chats.dal import ChatDal, MessageDal
 from src.chats.schemas import (
     ChatSaveSchema,
     ChatResponseSchema,
@@ -10,12 +13,11 @@ from src.chats.schemas import (
     MessageResponseSchema,
     MessagesDeleteSchema,
 )
-from pydantic import UUID4
 
-chat_router = APIRouter(prefix="/chats", tags=["chats"])
+router = APIRouter(prefix="/chats", tags=["chats"])
 
 
-@chat_router.post(
+@router.post(
     "/create_chat",
     response_model=ChatResponseSchema,
 )
@@ -32,7 +34,7 @@ async def create_chat(
     return chat
 
 
-@chat_router.get(
+@router.get(
     "/get_all",
     response_model=list[ChatResponseSchema],
 )
@@ -40,7 +42,7 @@ async def get_all_chats(session: session_dep):
     return await ChatDal.get_all(session=session)
 
 
-@chat_router.put("/add_messages")
+@router.put("/add_messages")
 @to_http_exception(CHAT_EXCEPTIONS)
 async def add_messages_in_chat(
     payload: list[MessageResponseSchema],
@@ -52,7 +54,7 @@ async def add_messages_in_chat(
     )
 
 
-@chat_router.put("/update_messages")
+@router.put("/update_messages")
 @to_http_exception(CHAT_EXCEPTIONS)
 async def update_messages(
     payload: list[MessageResponseSchema],
@@ -61,7 +63,7 @@ async def update_messages(
     await MessageDal.update_rows(payload=payload, session=session)
 
 
-@chat_router.put("/delete_messages")
+@router.put("/delete_messages")
 @to_http_exception(CHAT_EXCEPTIONS)
 async def delete_messages(
     payload: MessagesDeleteSchema,
@@ -73,7 +75,7 @@ async def delete_messages(
     )
 
 
-@chat_router.get("/{uuid}")
+@router.get("/{uuid}")
 async def get_chat(uuid: UUID4, session: session_dep):
     ident = {"uuid": uuid}
     return await ChatDal.get_one_by(
@@ -82,18 +84,18 @@ async def get_chat(uuid: UUID4, session: session_dep):
     )
 
 
-@chat_router.get("/{uuid}/messages", response_model=list[MessageResponseSchema])
+@router.get("/{uuid}/messages", response_model=list[MessageResponseSchema])
 async def get_chat_messages(uuid: UUID4, session: session_dep):
     return await MessageDal.get_messages(chat_uuid=uuid, session=session)
 
 
-@chat_router.put("/{uuid}")
+@router.put("/{uuid}")
 async def update_chat(uuid: UUID4, payload: ChatUpdateSchema, session: session_dep):
     data = {"uuid": uuid, "name": payload.name}
     await ChatDal.update_rows(payload=[data], session=session)
 
 
-@chat_router.delete("/{uuid}")
+@router.delete("/{uuid}")
 async def delete_chat(uuid: UUID4, session: session_dep):
     ident = {"uuid": uuid}
     await ChatDal.delete_by(ident=ident, session=session)

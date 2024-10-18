@@ -1,10 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from pydantic import (
-    BaseModel as BaseSchema,
-    UUID4,
-)
+from pydantic import BaseModel as BaseSchema, UUID4
 
 
 # ! CHATS

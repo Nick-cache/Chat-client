@@ -1,9 +1,10 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from src.config import settings
-from sqlalchemy.orm import DeclarativeBase, declared_attr
-from typing import Annotated
-from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
+from typing import Annotated
+
+from sqlalchemy.orm import DeclarativeBase, declared_attr
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+
+from src.config import settings
 
 
 class BaseModel(DeclarativeBase):

@@ -1,6 +1,7 @@
+from fastapi import HTTPException
+
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import StaleDataError
-from fastapi import HTTPException
 
 INVALID_PAYLOAD = HTTPException(
     status_code=422,

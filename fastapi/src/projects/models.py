@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, ForeignKey
-
-from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
+
+from sqlalchemy import String, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID
 
 from src.database import BaseModel
 from src.chats.models import Chat
