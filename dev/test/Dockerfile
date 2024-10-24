@@ -2,7 +2,7 @@ FROM python:3.10
 
 WORKDIR	/app/src
 
-COPY ./fastapi/requirements.txt /app/src/requirements.txt
+COPY ./backend/requirements.txt /app/src/requirements.txt
 
 RUN	apt-get update
 RUN	apt-get -y install python3-dev gcc libc-dev git

@@ -12,7 +12,7 @@ services:
       - POSTGRES_DB
       - POSTGRES_PORT
 
-  fastapi:
+  backend:
     container_name: ${FASTAPI_SERVICE}
     build:
       context: ../
@@ -38,7 +38,7 @@ services:
     depends_on:
       - ${POSTGRES_SERVICE}
 
-  fastapi-test:
+  backend-test:
     extends: fastapi
     container_name: "${FASTAPI_SERVICE}-test"
     build:
@@ -48,7 +48,7 @@ services:
     ports: !reset []
     command: bash -c "find /app/src test | entr -n pytest test"
 
-  # express:
+  # lmsconnector:
   #   container_name: ${EXPRESS_SERVICE}
   #   build:
   #     context: ../
@@ -60,7 +60,7 @@ services:
   #   command: npx nodemon /app/src/index.js
   #   network_mode: host
 
-  # vite:
+  # frontend:
   #   container_name: vite
   #   build: 
   #     context: ../

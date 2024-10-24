@@ -2,7 +2,7 @@ FROM python:3.11.0-alpine
 
 WORKDIR /app
 
-COPY ./fastapi/requirements.txt /app/requirements.txt
+COPY ./backend/requirements.txt /app/requirements.txt
 
 RUN set -eux \
     && apk add --no-cache --virtual .build-deps build-base \
