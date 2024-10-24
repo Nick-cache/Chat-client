@@ -13,52 +13,52 @@ services:
       - POSTGRES_PORT
 
   backend:
-    container_name: ${FASTAPI_SERVICE}
+    container_name: ${BACKEND_SERVICE}
     build:
       context: ../
-      dockerfile: ./dev/fastapi/Dockerfile
+      dockerfile: ./dev/backend/Dockerfile
     ports:
-      - "${FASTAPI_PORT}:${FASTAPI_PORT}"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     volumes:
-      - ../fastapi/src:/app/src
+      - ../backend/src:/app/src
     environment:
-      - FASTAPI_HOST
-      - FASTAPI_PORT
-      - FASTAPI_RELOAD
-      - FASTAPI_WORKERS
-      - POSTGRES_URI
+      - BACKEND_HOST
+      - BACKEND_PORT
+      - BACKEND_RELOAD
+      - BACKEND_WORKERS
       - REDIS_HOST
       - REDIS_PORT
       - REDIS_BROKER
       - REDIS_CACHE
+      - POSTGRES_URI
       - TIMEZONE
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=/app
     depends_on:
-      - ${POSTGRES_SERVICE}
+      - postgres
 
   backend-test:
-    extends: fastapi
-    container_name: "${FASTAPI_SERVICE}-test"
+    extends: backend
+    container_name: "${BACKEND_SERVICE}-test"
     build:
       dockerfile: ./dev/test/Dockerfile
     volumes:
-      - ../fastapi/src:/app/src
+      - ../backend/src:/app/src
     ports: !reset []
     command: bash -c "find /app/src test | entr -n pytest test"
 
-  # lmsconnector:
-  #   container_name: ${EXPRESS_SERVICE}
-  #   build:
-  #     context: ../
-  #     dockerfile: ./dev/express/Dockerfile
-  #   volumes:
-  #     - ../express/src:/app/src
-  #   ports:
-  #     - "${EXPRESS_PORT}:${EXPRESS_PORT}"
-  #   command: npx nodemon /app/src/index.js
-  #   network_mode: host
+  lmsconnector:
+    container_name: ${LMSCONNECTOR_SERVICE}
+    build:
+      context: ../
+      dockerfile: ./dev/lmsconnector/Dockerfile
+    volumes:
+      - ../lmsconnector/src:/app/src
+    ports:
+      - "${LMSCONNECTOR_PORT}:${LMSCONNECTOR_PORT}"
+    command: npx nodemon /app/src/index.js
+    network_mode: host
 
   # frontend:
   #   container_name: vite
