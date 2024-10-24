@@ -21,10 +21,10 @@ class SettingsWithKey(BaseSettings):
 class App(SettingsWithKey):
     _key = "app"
 
-    host: str = Field(alias="FASTAPI_HOST")
-    port: int = Field(alias="FASTAPI_PORT")
-    reload: bool = Field(alias="FASTAPI_RELOAD")
-    workers: int = Field(alias="FASTAPI_WORKERS")
+    host: str = Field(alias="BACKEND_HOST")
+    port: int = Field(alias="BACKEND_PORT")
+    reload: bool = Field(alias="BACKEND_RELOAD")
+    workers: int = Field(alias="BACKEND_WORKERS")
 
 
 class Redis(SettingsWithKey):
