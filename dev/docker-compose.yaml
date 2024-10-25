@@ -16,7 +16,7 @@ services:
     container_name: ${BACKEND_SERVICE}
     build:
       context: ../
-      dockerfile: ./dev/backend/Dockerfile
+      dockerfile: ./backend/Dockerfile
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     volumes:
@@ -42,17 +42,18 @@ services:
     extends: backend
     container_name: "${BACKEND_SERVICE}-test"
     build:
-      dockerfile: ./dev/test/Dockerfile
+      dockerfile: ./backend/test/Dockerfile
     volumes:
       - ../backend/src:/app/src
+      - ../backend/test:/app/test
     ports: !reset []
-    command: bash -c "find /app/src test | entr -n pytest test"
+    command: bash -c "find /app test | entr -n pytest test"
 
   lmsconnector:
     container_name: ${LMSCONNECTOR_SERVICE}
     build:
       context: ../
-      dockerfile: ./dev/lmsconnector/Dockerfile
+      dockerfile: ./lmsconnector/Dockerfile
     volumes:
       - ../lmsconnector/src:/app/src
     ports:
@@ -64,11 +65,11 @@ services:
   #   container_name: vite
   #   build: 
   #     context: ../
-  #     dockerfile: ./dev/vite/Dockerfile
+  #     dockerfile: ./frontend/Dockerfile
   #   volumes:
-  #     - ../vite:/app
+  #     - ../frontend:/app
   #   ports:
-  #     - "${VITE_PORT}:${VITE_PORT}"
+  #     - "${FRONTEND_PORT}:${FRONTEND_PORT}"
 
   # redis:
   #   container_name: ${REDIS_SERVICE}
