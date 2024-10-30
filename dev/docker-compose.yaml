@@ -20,7 +20,7 @@ services:
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     volumes:
-      - ../backend/src:/app/src
+      - ../backend:/app
     environment:
       - BACKEND_HOST
       - BACKEND_PORT
@@ -44,8 +44,7 @@ services:
     build:
       dockerfile: ./backend/test/Dockerfile
     volumes:
-      - ../backend/src:/app/src
-      - ../backend/test:/app/test
+      - ../backend:/app
     ports: !reset []
     command: bash -c "find /app test | entr -n pytest test"
     # command: pytest test
