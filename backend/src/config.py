@@ -4,20 +4,6 @@ from datetime import timezone
 from pytz import timezone as tz
 
 
-class Settings:
-    def __init__(
-        self,
-        app: BaseSettings,
-        redis: BaseSettings,
-        postgres: BaseSettings,
-        timezone: BaseSettings,
-    ) -> None:
-        self.app = app
-        self.redis = redis
-        self.postgres = postgres
-        self.timezone = timezone
-
-
 class App(BaseSettings):
     host: str = Field(alias="BACKEND_HOST")
     port: int = Field(alias="BACKEND_PORT")
@@ -50,6 +36,20 @@ class Timezone(BaseSettings):
     @property
     def timezone(self) -> timezone:
         return tz(self.raw_timezone)
+
+
+class Settings:
+    def __init__(
+        self,
+        app: BaseSettings,
+        redis: BaseSettings,
+        postgres: BaseSettings,
+        timezone: BaseSettings,
+    ) -> None:
+        self.app = app
+        self.redis = redis
+        self.postgres = postgres
+        self.timezone = timezone
 
 
 settings = Settings(

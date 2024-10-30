@@ -7,8 +7,7 @@ from src.chats.dal import ChatDal, MessageDal
 class ChatService:
     @classmethod
     async def create(cls, name: str, tokens: int):
-        chat = await ChatDal.create(name, tokens)
-        return chat
+        return await ChatDal.create(name, tokens)
 
     @classmethod
     async def change_name(cls, uuid: UUID4, name: str):
@@ -28,9 +27,14 @@ class ChatService:
 
     @classmethod
     async def add_message(
-        cls, role: str, content: str, date: datetime, chat_uuid: UUID4, stopped: bool
+        cls,
+        role: str,
+        content: str,
+        date: datetime,
+        chat_uuid: UUID4,
+        stopped: bool,
     ):
-        await MessageDal.create(role, content, date, chat_uuid, stopped)
+        await MessageDal.create(role, content, date, stopped, chat_uuid)
 
     @classmethod
     async def get_messages(chat_uuid: UUID4):

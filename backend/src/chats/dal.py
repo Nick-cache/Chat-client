@@ -45,15 +45,15 @@ class ChatDal:
 class MessageDal:
     @classmethod
     async def create(
-        cls, role: str, content: str, date: datetime, chat_uuid: UUID4, stopped: bool
+        cls, role: str, content: str, date: datetime, stopped: bool, chat_uuid: UUID4
     ):
         async with DatabaseManager.session_factory() as session:
             message = Message(
                 role=role,
                 content=content,
                 date=date,
-                chat_uuid=chat_uuid,
                 stopped=stopped,
+                chat_uuid=chat_uuid,
             )
             session.add(message)
             await session.commit()
