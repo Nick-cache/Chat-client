@@ -20,7 +20,7 @@ class ChatUpdateSchema(BaseSchema):
     name: str
 
 
-class ChatResponseSchema(ChatSaveSchema):
+class ChatResponseSchema(ChatSchema):
     pass
 
 
