@@ -48,16 +48,17 @@ services:
       - ../backend/test:/app/test
     ports: !reset []
     command: bash -c "find /app test | entr -n pytest test"
+    # command: pytest test
 
-  lmsconnector:
-    container_name: ${LMSCONNECTOR_SERVICE}
+  lms:
+    container_name: ${LMS_SERVICE}
     build:
       context: ../
-      dockerfile: ./lmsconnector/Dockerfile
+      dockerfile: ./lms/Dockerfile
     volumes:
-      - ../lmsconnector/src:/app/src
+      - ../lms/src:/app/src
     ports:
-      - "${LMSCONNECTOR_PORT}:${LMSCONNECTOR_PORT}"
+      - "${LMS_PORT}:${LMS_PORT}"
     command: npx nodemon /app/src/index.js
     network_mode: host
 
