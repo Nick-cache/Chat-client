@@ -12,16 +12,14 @@ class ChatSchema(BaseSchema):
     project_uuid: UUID4 | None = None
 
 
-class ChatSaveSchema(ChatSchema):
-    pass
+class ChatCreateSchema(BaseSchema):
+    name: str
+    tokens: int
+    project_uuid: UUID4 | None = None
 
 
 class ChatUpdateSchema(BaseSchema):
     name: str
-
-
-class ChatResponseSchema(ChatSchema):
-    pass
 
 
 # ! MESSAGES
@@ -34,9 +32,18 @@ class MessageSchema(BaseSchema):
     stopped: bool
 
 
+class MessageCreateSchema(BaseSchema):
+    role: str
+    content: str
+    date: datetime
+    chat_uuid: UUID4
+    stopped: bool
+
+
+class MessageUpdateSchema(BaseSchema):
+    uuid: UUID4
+    content: str
+
+
 class MessagesDeleteSchema(BaseSchema):
     uuids: list[UUID4]
-
-
-class MessageResponseSchema(MessageSchema):
-    pass
