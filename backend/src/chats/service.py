@@ -1,69 +1,45 @@
-from typing import Any
 from pydantic import UUID4
-
-from sqlalchemy.ext.asyncio import AsyncSession
+from datetime import datetime
 
 from src.chats.dal import ChatDal, MessageDal
 
 
 class ChatService:
     @classmethod
-    async def create(cls, payload: dict[str, Any], session: AsyncSession):
-        chat = await ChatDal.create(
-            payload,
-            session=session,
-        )
-        await session.refresh(chat)
+    async def create(cls, name: str, tokens: int):
+        chat = await ChatDal.create(name, tokens)
         return chat
 
     @classmethod
-    async def update(cls, payload: list[dict[str, Any]], session: AsyncSession):
-        await ChatDal.update_rows(payload=payload, session=session)
+    async def change_name(cls, uuid: UUID4, name: str):
+        await ChatDal.change_name(uuid, name)
 
     @classmethod
-    async def get(cls, ident: dict[str, UUID4], session: AsyncSession):
-        return await ChatDal.get_one_by(
-            ident=ident,
-            session=session,
-        )
+    async def get_by_uuid(cls, uuid: UUID4):
+        return await ChatDal.get_by_uuid(uuid)
 
     @classmethod
-    async def get_all(cls, session: AsyncSession):
-        return await ChatDal.get_all(session=session)
+    async def get_all(cls):
+        return await ChatDal.get_all()
 
     @classmethod
-    async def delete(cls, ident: dict[str, UUID4], session: AsyncSession):
-        await ChatDal.delete_by(ident=ident, session=session)
+    async def delete_by_uuid(cls, uuid: UUID4):
+        await ChatDal.delete_by_uuid(uuid)
 
     @classmethod
-    async def add_messages(
-        cls,
-        payload: list[dict[str, Any]],
-        session: AsyncSession,
+    async def add_message(
+        cls, role: str, content: str, date: datetime, chat_uuid: UUID4, stopped: bool
     ):
-        await MessageDal.insert_rows(
-            payload=payload,
-            session=session,
-        )
-
-    async def get_messages(uuid: UUID4, session: AsyncSession):
-        return await MessageDal.get_messages(chat_uuid=uuid, session=session)
+        await MessageDal.create(role, content, date, chat_uuid, stopped)
 
     @classmethod
-    async def update_messages(
-        cls,
-        payload: list[dict[str, Any]],
-        session: AsyncSession,
-    ):
-        await MessageDal.update_rows(payload=payload, session=session)
+    async def get_messages(chat_uuid: UUID4):
+        return await MessageDal.get_messages(chat_uuid)
 
     @classmethod
-    async def delete_messages(
-        cls,
-        uuids: list[UUID4],
-        session: AsyncSession,
-    ):
-        await MessageDal.delete_messages_by_uuids(
-            uuids=uuids,
-            session=session,
-        )
+    async def update_message(cls, uuid: UUID4, content: str):
+        await MessageDal.update_message(uuid, content)
+
+    @classmethod
+    async def delete_messages(cls, uuids: list[UUID4]):
+        await MessageDal.delete_messages_by_uuids(uuids)
