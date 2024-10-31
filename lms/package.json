@@ -6,16 +6,11 @@
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "socket.io": "^4.8.0",
-    "swagger-ui-express": "^5.0.1",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/uuid": "^10.0.0",
-    "nodemon": "^3.1.7",
-    "swagger-autogen": "^2.23.7"
-  },
-  "scripts": {
-    "swagger": "node ./src/swagger.js"
+    "nodemon": "^3.1.7"
   }
 }
