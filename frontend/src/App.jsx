@@ -96,7 +96,7 @@ const ChatUI = () => {
                 value={inputValue}
                 onChange={handleInputChange}
                 placeholder="Type a message..."
-                className="flex-1 border rounded-l p-2 mr-2 min-h-[5rem] scrollbar-thin" // Increased height here and added custom scrollbar class
+                className="flex-1 border rounded-l p-2 mr-2 min-h-[5rem] scrollbar-thin"
               />
               <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-r">Send</button>
             </form>
