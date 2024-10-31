@@ -1,8 +1,13 @@
 import SDK from "@lmstudio/sdk";
 const { LMStudioClient } = SDK;
 
+const lmsHost = process.env.LMS_LOCAL_HOST;
+const lmsPort = process.env.LMS_LOCAL_PORT;
+
 class LmManager {
-  client = new LMStudioClient();
+  client = new LMStudioClient({
+    baseUrl: `ws://${lmsHost}:${lmsPort}`,
+  });
   constructor() {
     this.models = {}; // { path: Model }
     this.loaded_models = {}; // ident : model

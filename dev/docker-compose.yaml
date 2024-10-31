@@ -47,7 +47,6 @@ services:
       - ../backend:/app
     ports: !reset []
     command: bash -c "find /app test | entr -n pytest test"
-    # command: pytest test
 
   lms:
     container_name: ${LMS_SERVICE}
@@ -59,8 +58,12 @@ services:
     ports:
       - "${LMS_PORT}:${LMS_PORT}"
     command: npx nodemon /app/src/index.js
-    network_mode: host
-
+    environment:
+      - LMS_LOCAL_HOST
+      - LMS_LOCAL_PORT
+    extra_hosts:
+      - "${LMS_LOCAL_HOST}:host-gateway"
+      
   # frontend:
   #   container_name: vite
   #   build: 
@@ -81,3 +84,4 @@ services:
   #     interval: 1s
   #     timeout: 3s
   #     retries: 5
+
