@@ -3,8 +3,8 @@ import cors from "cors";
 import { Server } from "socket.io";
 import { createServer } from "http";
 
-import { lmManager } from "./llmodels/service.js";
-import { router as llmodels_router } from "./llmodels/router.js";
+import { lmManager } from "./service.js";
+import { router as llmodels_router } from "./router.js";
 
 const port = 3000;
 
@@ -19,6 +19,6 @@ app.once("started", async () => {
   await lmManager.init();
 });
 app.listen(port, () => {
-  console.log(`http://localhost:${port}/docs`);
+  console.log(`http://localhost:${port}`);
   app.emit("started");
 });
