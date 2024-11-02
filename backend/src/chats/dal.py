@@ -9,7 +9,7 @@ from src.chats.models import Chat, Message
 
 class ChatDal:
     @classmethod
-    async def create(cls, name: str, tokens: int):
+    async def create(cls, name: str, tokens: int) -> Chat:
         async with DatabaseManager.session_factory() as session:
             chat = Chat(name=name, tokens=tokens)
             session.add(chat)
@@ -24,14 +24,14 @@ class ChatDal:
             await session.commit()
 
     @classmethod
-    async def get_by_uuid(cls, uuid: UUID4):
+    async def get_by_uuid(cls, uuid: UUID4) -> Chat:
         async with DatabaseManager.session_factory() as session:
             return (
                 await session.execute(select(Chat).filter(Chat.uuid == uuid))
             ).scalar_one_or_none()
 
     @classmethod
-    async def get_all(cls):
+    async def get_all(cls) -> list[Chat]:
         async with DatabaseManager.session_factory() as session:
             return (await session.scalars(select(Chat))).unique().all()
 
@@ -46,7 +46,7 @@ class MessageDal:
     @classmethod
     async def create(
         cls, role: str, content: str, date: datetime, stopped: bool, chat_uuid: UUID4
-    ):
+    ) -> Message:
         async with DatabaseManager.session_factory() as session:
             message = Message(
                 role=role,
@@ -73,7 +73,7 @@ class MessageDal:
             await session.commit()
 
     @classmethod
-    async def get_messages(cls, chat_uuid: UUID4):
+    async def get_messages(cls, chat_uuid: UUID4) -> list[Message]:
         async with DatabaseManager.session_factory() as session:
             return (
                 (
