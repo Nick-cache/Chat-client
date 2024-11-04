@@ -56,10 +56,8 @@ class LmManager {
   };
 
   unload = async (ident) => {
-    if (this.loaded_models[ident] !== undefined) {
-      await this.client.llm.unload(ident);
-      delete this.loaded_models[ident];
-    }
+    await this.client.llm.unload(ident);
+    delete this.loaded_models[ident];
   };
 }
 
