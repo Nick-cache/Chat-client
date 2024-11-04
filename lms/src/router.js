@@ -9,16 +9,15 @@ router.get("/list_models", async (req, res) => {
 });
 
 router.get("/list_loaded_models", async (req, res) => {
-  const models = {
-    Llms: lmManager.llm,
-    Embeddings: lmManager.embedding,
-  };
-  return res.json(models);
+  return res.json(lmManager.loaded_models);
 });
 
-// request body: { path: str, type: str, ident: str, contentLength: num }
+// request body: { path: str, ident: str, contentLength: num }
 router.post("/load_model", async (req, res) => {
   const path = req.body.path;
+  if (lmManager.models[path] === undefined)
+    return res.status(404).json("Wrong path");
+
   const contentLength = Number(req.body.contentLength);
   let ident = req.body.ident;
 
@@ -43,11 +42,13 @@ router.post("/load_model", async (req, res) => {
   return res.json(`Loaded with identifier: ${ident}`);
 });
 
-// request body: { type: str, ident: str }
+// request body: { ident: str }
 router.post("/unload_model", async (req, res) => {
-  const type = req.body.type;
   const ident = req.body.ident;
-  await lmManager.unload(type, ident);
+  if (lmManager.loaded_models[ident] === undefiend)
+    return res.status(404).json("Wrong identifier");
+
+  await lmManager.unload(ident);
   return res.json(`Unloaded ${ident}`);
 });
 
@@ -55,7 +56,7 @@ router.post("/unload_model", async (req, res) => {
 router.post("/:ident/stream", async (req, res) => {
   const ident = req.params.ident;
   const model = lmManager.loaded_models[ident];
-  if (model === undefined) return res.status(400).json("Wrong identifier");
+  if (model === undefined) return res.status(404).json("Wrong identifier");
 
   const date = new Date().toJSON().slice(0, -1);
   const history = req.body.history;
