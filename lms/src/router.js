@@ -9,17 +9,23 @@ router.get("/list_models", async (req, res) => {
 });
 
 router.get("/list_loaded_models", async (req, res) => {
-  return res.json(lmManager.loaded_models);
+  const data = Object.values(lmManager.loaded_models).map((model) => {
+    return {
+      path: model.path,
+      ident: model.identifier,
+    };
+  });
+  return res.json(data);
 });
 
-// request body: { path: str, ident: str, contentLength: num }
+// request body: { path: str, ident: str }
 router.post("/load_model", async (req, res) => {
   const path = req.body.path;
   if (lmManager.models[path] === undefined)
-    return res.status(404).json("Wrong path");
+    return res.status(422).json("Wrong path");
 
-  const contentLength = Number(req.body.contentLength);
   let ident = req.body.ident;
+  let contextLength = Number(req.body.contextLength);
 
   const controller = new AbortController();
 
@@ -32,23 +38,32 @@ router.post("/load_model", async (req, res) => {
     req.socket.emit("close");
   });
 
-  ident = await lmManager.load(
-    path,
-    ident,
-    contentLength,
-    controller,
-    onProgress
-  );
-  return res.json(`Loaded with identifier: ${ident}`);
+  try {
+    ident = await lmManager.load(
+      path,
+      ident,
+      contextLength,
+      controller,
+      onProgress
+    );
+    return res.json(`Loaded with identifier: ${ident}`);
+  } catch (error) {
+    return res.status(400).json(`An error occurred ${error}`);
+  }
 });
 
 // request body: { ident: str }
 router.post("/unload_model", async (req, res) => {
   const ident = req.body.ident;
-  if (lmManager.loaded_models[ident] === undefiend)
-    return res.status(404).json("Wrong identifier");
 
-  await lmManager.unload(ident);
+  if (lmManager.loaded_models[ident] === undefined)
+    return res.status(422).json("Wrong identifier");
+
+  try {
+    await lmManager.unload(ident);
+  } catch (error) {
+    return res.status(400).json(`An error occurred ${error}`);
+  }
   return res.json(`Unloaded ${ident}`);
 });
 
@@ -56,31 +71,35 @@ router.post("/unload_model", async (req, res) => {
 router.post("/:ident/stream", async (req, res) => {
   const ident = req.params.ident;
   const model = lmManager.loaded_models[ident];
-  if (model === undefined) return res.status(404).json("Wrong identifier");
+  if (model === undefined) return res.status(422).json("Wrong identifier");
 
   const date = new Date().toJSON().slice(0, -1);
   const history = req.body.history;
   const promt = req.body.promt;
 
-  const stream = model.respond([...history, promt]);
+  try {
+    const stream = model.respond([...history, promt]);
 
-  let stopped = false;
-  req.socket.addListener(modelsInputSocketEvents.messageStop, async () => {
-    await stream.cancel();
-    stopped = true;
-    req.socket.emit("close");
-  });
+    let stopped = false;
+    req.socket.addListener(modelsInputSocketEvents.messageStop, async () => {
+      await stream.cancel();
+      stopped = true;
+      req.socket.emit("close");
+    });
 
-  for await (const data of stream) {
-    req.socket.emit(modelsOutputSocketEvents.messageStream, data);
+    for await (const data of stream) {
+      req.socket.emit(modelsOutputSocketEvents.messageStream, data);
+    }
+
+    const response = {
+      role: "assistant",
+      content: stream.content.slice(9),
+      date: date,
+      stopped: stopped,
+    };
+
+    return res.json(response);
+  } catch (error) {
+    return res.status(400).json(`An error occurred ${error}`);
   }
-
-  const response = {
-    role: "assistant",
-    content: stream.content.slice(9),
-    date: date,
-    stopped: stopped,
-  };
-
-  return res.json(response);
 });
