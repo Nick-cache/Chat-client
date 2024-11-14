@@ -18,14 +18,14 @@ router.get("/list_loaded_models", async (req, res) => {
   return res.json(data);
 });
 
-// request body: { path: str, ident: str }
 router.post("/load_model", async (req, res) => {
   const path = req.body.path;
   if (lmManager.models[path] === undefined)
     return res.status(422).json("Wrong path");
 
   let ident = req.body.ident;
-  let contextLength = Number(req.body.contextLength);
+  const contextLength = Number(req.body.contextLength);
+  const GPULayers = Number(req.body.GPULayers);
 
   const controller = new AbortController();
 
@@ -43,6 +43,7 @@ router.post("/load_model", async (req, res) => {
       path,
       ident,
       contextLength,
+      GPULayers,
       controller,
       onProgress
     );
@@ -52,7 +53,6 @@ router.post("/load_model", async (req, res) => {
   }
 });
 
-// request body: { ident: str }
 router.post("/unload_model", async (req, res) => {
   const ident = req.body.ident;
 
@@ -67,7 +67,6 @@ router.post("/unload_model", async (req, res) => {
   return res.json(`Unloaded ${ident}`);
 });
 
-// request body: {history: [messages], promt: message}
 router.post("/:ident/stream", async (req, res) => {
   const ident = req.params.ident;
   const model = lmManager.loaded_models[ident];
