@@ -2,7 +2,7 @@ FROM node:20
 
 WORKDIR /app
 
-COPY ./vite/package.json /app
+COPY ./frontend/package.json /app
 
 RUN npm install
 
