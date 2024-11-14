@@ -1,21 +1,22 @@
+import { useSelector } from 'react-redux';
 import React from 'react';
 import ChatContent from './ChatContent';
 import MessageInput from './MessageInput';
+import ModelsSelector from './ModelsSelector';
 
-const MainArea = ({ activeTab, inputValue, handleInputChange, handleSubmit, messages }) => {
+const MainArea = ({ activeTab, inputValue, handleInputChange, handleSubmit, messages}) => {
+
   return (
-    <div className="flex-1 p-4 relative flex flex-col">
-      {activeTab.startsWith('Chat') && (
-        <>
-          <h1>{activeTab}</h1>
-          <ChatContent messages={messages} />
-          <MessageInput
-            inputValue={inputValue}
-            handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit}
-          />
-        </>
-      )}
+    <div className="w-[100%] h-[85%] items-baseline ">
+      <ChatContent messages={messages} />
+      <div className='flex mb-20 justify-beetwen'>
+        <ModelsSelector />
+        <MessageInput
+          inputValue={inputValue}
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+        />
+      </div>
     </div>
   );
 };
