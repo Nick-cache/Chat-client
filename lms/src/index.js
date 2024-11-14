@@ -12,7 +12,7 @@ const httpServer = createServer();
 const app = express(httpServer);
 const io = new Server(httpServer);
 
-app.use(cors({ origin: ["http://localhost:5173"] }));
+app.use(cors({ origin: ["http://localhost:5173", "http://frontend:5173"] }));
 app.use(express.json());
 app.use(llmodels_router);
 app.once("started", async () => {
