@@ -38,15 +38,15 @@ services:
     depends_on:
       - postgres
 
-  backend-test:
-    extends: backend
-    container_name: "${BACKEND_SERVICE}-test"
-    build:
-      dockerfile: ./backend/test/Dockerfile
-    volumes:
-      - ../backend:/app
-    ports: !reset []
-    command: bash -c "find /app test | entr -n pytest test"
+  # backend-test:
+  #   extends: backend
+  #   container_name: "${BACKEND_SERVICE}-test"
+  #   build:
+  #     dockerfile: ./backend/test/Dockerfile
+  #   volumes:
+  #     - ../backend:/app
+  #   ports: !reset []
+  #   command: bash -c "find /app test | entr -n pytest test"
 
   lms:
     container_name: ${LMS_SERVICE}
@@ -63,16 +63,16 @@ services:
       - LMS_LOCAL_PORT
     extra_hosts:
       - "${LMS_LOCAL_HOST}:host-gateway"
-      
-  # frontend:
-  #   container_name: vite
-  #   build: 
-  #     context: ../
-  #     dockerfile: ./frontend/Dockerfile
-  #   volumes:
-  #     - ../frontend:/app
-  #   ports:
-  #     - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+
+  frontend:
+    container_name: frontend
+    build: 
+      context: ../
+      dockerfile: ./frontend/Dockerfile
+    volumes:
+      - ../frontend:/app
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
 
   # redis:
   #   container_name: ${REDIS_SERVICE}
