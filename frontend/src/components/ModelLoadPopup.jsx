@@ -42,10 +42,10 @@ const ModelLoadPopup = ({togglePopup, model}) => {
       <div className="w-[100%] border-teal-600/50 border-l-4 rounded pl-2">
       <div className="flex justify-between">
         <div className="font-bold ">Identifier</div>
-        <button className="hover:text-amber-600 cursor-pointer font-bold text-xl" onClick={loadModelHandler(model.path, identifier, contextLength, GPULayers)} type="button">Load</button>
+        <button className="hover:text-amber-600 cursor-pointer font-bold text-xl" onClick={loadModelHandler(model.formatedPath, identifier, contextLength, GPULayers)} type="button">Load</button>
       </div>
         <span className="px-2">Provide an identifier for this model. Leave blank to use the default identifier.</span>
-        <input className="border-teal-600 mt-2 border-l-2 px-2 bg-transparent bg-gradient-to-t from-teal-200/10 w-[100%] text-center text-emerald-100 caret-pink-500 outline-none" type="text" placeholder={model.formatedPath} onChange={(event) => identifierHandler(event.target.value)} value={identifier}/>
+        <input className="mt-2 px-2 bg-transparent bg-gradient-to-t from-teal-200/10 w-[100%] text-center text-emerald-100 caret-pink-500 outline-none" type="text" placeholder={model.formatedPath} onChange={(event) => identifierHandler(event.target.value)} value={identifier}/>
       </div>
 
       <div className="w-[100%] border-teal-600/50 border-l-4 rounded pl-2 drop-shadow">

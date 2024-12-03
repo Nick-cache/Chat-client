@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.main-area {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
 html {
   overflow-y: hidden;
 
@@ -26,4 +20,99 @@ html {
   }
 
   scrollbar-width: none;
+}
+
+.hljs {
+  background: none;
+  border-left-width: 1px;
+  border-color: rgba(139, 216, 139, 0.637);
+  overflow-y: hidden;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  scrollbar-width: none;
+}
+
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em
+}
+code.hljs {
+  padding: 3px 5px
+}
+/* Comment */
+.hljs-comment,
+.hljs-quote {
+  color: #d4d0ab
+}
+/* Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #ffa07a
+}
+/* Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #f5ab35
+}
+/* Yellow */
+.hljs-attribute {
+  color: #ffd700
+}
+/* Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #abe338
+}
+/* Blue */
+.hljs-title,
+.hljs-section {
+  color: #00e0e0
+}
+/* Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #dcc6e0
+}
+.hljs-emphasis {
+  font-style: italic
+}
+.hljs-strong {
+  font-weight: bold
+}
+@media screen and (-ms-high-contrast: active) {
+  .hljs-addition,
+  .hljs-attribute,
+  .hljs-built_in,
+  .hljs-bullet,
+  .hljs-comment,
+  .hljs-link,
+  .hljs-literal,
+  .hljs-meta,
+  .hljs-number,
+  .hljs-params,
+  .hljs-string,
+  .hljs-symbol,
+  .hljs-type,
+  .hljs-quote {
+    color: highlight
+  }
+  .hljs-keyword,
+  .hljs-selector-tag {
+    font-weight: bold
+  }
 }
