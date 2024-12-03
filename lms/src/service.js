@@ -1,10 +1,8 @@
 import SDK from "@lmstudio/sdk";
 import axios from "axios";
+import { BACKEND_SERVICE, LMS_HOST, LMS_PORT } from "./config.js";
 
 const { LMStudioClient } = SDK;
-
-const lmsHost = process.env.LMS_LOCAL_HOST;
-const lmsPort = process.env.LMS_LOCAL_PORT;
 
 class HuggingFace {
   constructor() {
@@ -36,7 +34,7 @@ class HuggingFace {
 class LmManager {
   constructor() {
     this.client = new LMStudioClient({
-      baseUrl: `ws://${lmsHost}:${lmsPort}`,
+      baseUrl: `ws://${LMS_HOST}:${LMS_PORT}`,
     });
     this.huggingFace = new HuggingFace();
     this.models = {}; // { path: Model }
@@ -46,10 +44,17 @@ class LmManager {
   _fillLoadedModels = async () => {
     const models = await this.client.llm.listLoaded();
     for await (const model of models) {
+      const formatedPath = /\b.*\//g.exec(model.path)[0].slice(0, -1);
       const res = await this.client.llm.get({
         identifier: model.identifier,
       });
-      this.loaded_models[model.identifier] = res;
+      const contextLength = await res.unstable_getContextLength();
+      const data = {
+        api: res,
+        formatedPath: formatedPath,
+        contextLength: contextLength,
+      };
+      this.loaded_models[model.identifier] = data;
     }
   };
 
@@ -58,7 +63,8 @@ class LmManager {
 
     const added = models.map(async (model) => {
       if (model.type !== "llm") return null;
-      const formatedPath = /\b.*\//g.exec(model.path)[0];
+      const formatedPath = /\b.*\//g.exec(model.path)[0].slice(0, -1);
+
       let data = { ...model, formatedPath: formatedPath };
       try {
         data = {
@@ -74,7 +80,7 @@ class LmManager {
     });
 
     for await (const model of added) {
-      if (model !== null) this.models[model.path] = model;
+      if (model !== null) this.models[model.formatedPath] = model;
     }
   };
 
@@ -103,11 +109,16 @@ class LmManager {
         },
       },
       signal: controller.signal,
-      verbose: false,
+      verbose: true,
       onProgress: onProgress,
     });
-
-    this.loaded_models[model.identifier] = model;
+    const formatedPath = /\b.*\//g.exec(model.path)[0].slice(0, -1);
+    const data = {
+      api: model,
+      formatedPath: formatedPath,
+      contextLength: contextLength,
+    };
+    this.loaded_models[model.identifier] = data;
     return model.identifier;
   };
 
@@ -118,3 +129,35 @@ class LmManager {
 }
 
 export const lmManager = new LmManager();
+
+class ChatApi {
+  constructor() {
+    this.client = axios.create({
+      baseURL: `${BACKEND_SERVICE}/chats`,
+    });
+  }
+
+  addMessage = async (role, content, date, chat_uuid, stopped, tokens) => {
+    const message = {
+      role: role,
+      content: content,
+      date: date,
+      chat_uuid: chat_uuid,
+      stopped: stopped,
+      tokens: tokens,
+    };
+    const res = await this.client.put("/add_message", message);
+  };
+
+  updateMessage = async (uuid, content, stopped, tokens) => {
+    const message = {
+      uuid: uuid,
+      content: content,
+      stopped: stopped,
+      tokens: tokens,
+    };
+    await this.client.put("/update_message", message);
+  };
+}
+
+export const chatApi = new ChatApi();
