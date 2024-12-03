@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
-
+import { messagesSlice } from "../chats/chatsSlice";
+import { LMS_DOMAIN_LINK } from "../../config";
 const getChosenModelLocal = () => {
   const parsed = JSON.parse(localStorage.getItem("chosenModel"));
   return { model: parsed };
@@ -55,7 +56,7 @@ const loadedModelsInitial = loadedModelsAdapter.getInitialState();
 export const lmsSlice = createApi({
   reducerPath: "lmsSlice",
   tagTypes: ["Models", "LoadedModels"],
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000" }),
+  baseQuery: fetchBaseQuery({ baseUrl: LMS_DOMAIN_LINK }),
   endpoints: (builder) => ({
     listModels: builder.query({
       query: () => ({
@@ -98,11 +99,33 @@ export const lmsSlice = createApi({
       }),
       invalidatesTags: ["LoadedModels"],
     }),
-    stream: builder.query({
-      query: ({ ident, history, promt }) => ({
+    stream: builder.mutation({
+      query: ({ ident, history, promt, chat_uuid }) => ({
         method: "POST",
         url: `/${ident}/stream`,
-        body: { history: history, promt: promt },
+        body: { history: history, promt: promt, chat_uuid: chat_uuid },
+      }),
+      onQueryStarted: async (arg, api) => {
+        await api.queryFulfilled;
+        api.dispatch(messagesSlice.util.invalidateTags(["Messages"]));
+      },
+    }),
+    resume: builder.mutation({
+      query: ({ ident, history, chat_uuid }) => ({
+        method: "POST",
+        url: `/${ident}/resume`,
+        body: { history: history, chat_uuid: chat_uuid },
+      }),
+      onQueryStarted: async (arg, api) => {
+        await api.queryFulfilled;
+        api.dispatch(messagesSlice.util.invalidateTags(["Messages"]));
+      },
+    }),
+    tokenize: builder.mutation({
+      query: ({ ident, content }) => ({
+        method: "POST",
+        url: `/${ident}/tokenize`,
+        body: { content: content },
       }),
     }),
   }),
@@ -111,9 +134,11 @@ export const lmsSlice = createApi({
 export const {
   useListModelsQuery,
   useListLoadedModelsQuery,
-  useStreamQuery,
+  useStreamMutation,
   useLoadModelMutation,
+  useResumeMutation,
   useUnloadModelMutation,
+  useTokenizeMutation,
 } = lmsSlice;
 
 export const selectModelsResult = lmsSlice.endpoints.listModels.select();
@@ -131,18 +156,11 @@ const selectLoadedModelsData = createSelector(
   (loadedModelsResult) => loadedModelsResult.data
 );
 
-export const {
-  selectAll: selectAllModels,
-  selectById: selectModelByIdent,
-  selectIds: selectModelsIdents,
-} = modelsAdapter.getSelectors(
+export const { selectAll: selectAllModels } = modelsAdapter.getSelectors(
   (state) => selectModelsData(state) ?? modelsInitial
 );
 
-export const {
-  selectAll: selectAllLoadedModels,
-  selectById: selectLoadedModelByIdent,
-  selectIds: selectLoadedModelsIdents,
-} = loadedModelsAdapter.getSelectors(
-  (state) => selectLoadedModelsData(state) ?? loadedModelsInitial
-);
+export const { selectAll: selectAllLoadedModels } =
+  loadedModelsAdapter.getSelectors(
+    (state) => selectLoadedModelsData(state) ?? loadedModelsInitial
+  );
