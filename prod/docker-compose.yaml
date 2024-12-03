@@ -1,0 +1,85 @@
+services:
+  postgres:
+    container_name: ${POSTGRES_NAME}
+    build:
+      context: ../
+      dockerfile: ./postgresql/Dockerfile
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_PORT
+    networks:
+      - postgres
+
+  backend:
+    container_name: ${BACKEND_NAME}
+    build:
+      context: ../
+      dockerfile: ./backend/Dockerfile
+    volumes:
+      - ../backend:/app
+    environment:
+      - BACKEND_HOST
+      - BACKEND_PORT
+      - BACKEND_RELOAD
+      - BACKEND_WORKERS
+      - BACKEND_CORS
+      - POSTGRES_SERVICE
+      - TIMEZONE
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONPATH=/app
+    networks:
+      - backend
+      - postgres
+    depends_on:
+      - postgres
+
+  lms:
+    container_name: ${LMS_NAME}
+    build:
+      context: ../
+      dockerfile: ./lms/Dockerfile
+    volumes:
+      - ../balancer/certs:/app/certs
+      - ../lms/src:/app/src
+    command: node /app/src/index.js
+    environment:
+      - LMS_LOCAL_HOST
+      - LMS_SOCKET
+      - LMS_LOCAL_PORT
+      - LMS_CORS
+      - BACKEND_SERVICE
+    extra_hosts:
+      - "${LMS_LOCAL_HOST}:host-gateway"
+    networks:
+      - lms
+      - backend
+
+  balancer:
+    container_name: ${BALANCER_NAME}
+    build:
+      context: ../
+      dockerfile: ./balancer/Dockerfile
+    volumes:
+      - ../balancer/default.conf:/etc/nginx/conf.d/default.conf
+      - ../balancer/nginx.conf:/etc/nginx/nginx.conf
+      - ../balancer/certs:/usr/share/nginx/certs
+      - ../frontend/dist:/usr/share/nginx/html
+    ports:
+      - "${BALANCER_HTTP_PORT}:${BALANCER_HTTP_PORT}"
+    networks:
+      - balancer
+      - backend
+      - lms
+
+networks:
+  balancer:
+    driver: bridge
+  backend:
+    driver: bridge
+  lms:
+    driver: bridge
+  postgres:
+    driver: bridge
