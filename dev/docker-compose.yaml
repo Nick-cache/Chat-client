@@ -1,19 +1,4 @@
 services:
-  postgres:
-    container_name: ${POSTGRES_NAME}
-    build:
-      context: ../
-      dockerfile: ./dev/postgresql/Dockerfile
-    ports:
-      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
-    environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
-      - POSTGRES_PORT
-    networks:
-      - postgres
-
   frontend:
     container_name: ${FRONTEND_NAME}
     build:
