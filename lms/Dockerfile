@@ -1,7 +1,7 @@
-FROM node:20
+FROM node
 
 WORKDIR /app
 
 COPY ./lms/package.json .
 
-RUN npm install 
+RUN npm install
