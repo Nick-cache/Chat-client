@@ -8,17 +8,13 @@ from pydantic import BaseModel as BaseSchema, UUID4
 class ChatSchema(BaseSchema):
     uuid: UUID4
     name: str
-    tokens: int
-    project_uuid: UUID4 | None = None
 
 
 class ChatCreateSchema(BaseSchema):
     name: str
-    tokens: int
-    project_uuid: UUID4 | None = None
 
 
-class ChatUpdateSchema(BaseSchema):
+class ChatChangeNameSchema(BaseSchema):
     name: str
 
 
@@ -30,6 +26,7 @@ class MessageSchema(BaseSchema):
     date: datetime
     chat_uuid: UUID4
     stopped: bool
+    tokens: int
 
 
 class MessageCreateSchema(BaseSchema):
@@ -38,11 +35,14 @@ class MessageCreateSchema(BaseSchema):
     date: datetime
     chat_uuid: UUID4
     stopped: bool
+    tokens: int
 
 
 class MessageUpdateSchema(BaseSchema):
     uuid: UUID4
     content: str
+    stopped: bool
+    tokens: int
 
 
 class MessagesDeleteSchema(BaseSchema):

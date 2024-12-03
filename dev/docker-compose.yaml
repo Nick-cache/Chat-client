@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: ${POSTGRES_SERVICE}
+    container_name: ${POSTGRES_NAME}
     build:
       context: ../
       dockerfile: ./dev/postgresql/Dockerfile
@@ -11,9 +11,30 @@ services:
       - POSTGRES_PASSWORD
       - POSTGRES_DB
       - POSTGRES_PORT
+    networks:
+      - postgres
+
+  frontend:
+    container_name: ${FRONTEND_NAME}
+    build:
+      context: ../
+      dockerfile: ./frontend/Dockerfile
+    volumes:
+      - ../frontend:/app
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    environment:
+      - FRONTEND_HOST
+      - FRONTEND_DEV
+      - LMS_DOMAIN_LINK
+      - LMS_SOCKET_PATH
+      - BACKEND_DOMAIN_LINK
+    networks:
+      - lms
+      - backend
 
   backend:
-    container_name: ${BACKEND_SERVICE}
+    container_name: ${BACKEND_NAME}
     build:
       context: ../
       dockerfile: ./backend/Dockerfile
@@ -26,30 +47,32 @@ services:
       - BACKEND_PORT
       - BACKEND_RELOAD
       - BACKEND_WORKERS
-      - REDIS_HOST
-      - REDIS_PORT
-      - REDIS_BROKER
-      - REDIS_CACHE
-      - POSTGRES_URI
+      - BACKEND_CORS
+      - POSTGRES_SERVICE
       - TIMEZONE
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=/app
     depends_on:
       - postgres
+    networks:
+      - backend
+      - postgres
 
   backend-test:
     extends: backend
-    container_name: "${BACKEND_SERVICE}-test"
+    container_name: "${BACKEND_NAME}-test"
     build:
       dockerfile: ./backend/test/Dockerfile
     volumes:
       - ../backend:/app
     ports: !reset []
     command: bash -c "find /app test | entr -n pytest test"
+    networks:
+      - backend
 
   lms:
-    container_name: ${LMS_SERVICE}
+    container_name: ${LMS_NAME}
     build:
       context: ../
       dockerfile: ./lms/Dockerfile
@@ -61,27 +84,19 @@ services:
     environment:
       - LMS_LOCAL_HOST
       - LMS_LOCAL_PORT
+      - LMS_SOCKET
+      - LMS_CORS
+      - BACKEND_SERVICE
     extra_hosts:
       - "${LMS_LOCAL_HOST}:host-gateway"
-      
-  # frontend:
-  #   container_name: vite
-  #   build: 
-  #     context: ../
-  #     dockerfile: ./frontend/Dockerfile
-  #   volumes:
-  #     - ../frontend:/app
-  #   ports:
-  #     - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    networks:
+      - lms
+      - backend
 
-  # redis:
-  #   container_name: ${REDIS_SERVICE}
-  #   build: ./redis
-  #   ports: 
-  #     - "${REDIS_PORT}:${REDIS_PORT}"
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
-  #     interval: 1s
-  #     timeout: 3s
-  #     retries: 5
-
+networks:
+  backend:
+    driver: bridge
+  postgres:
+    driver: bridge
+  lms:
+    driver: bridge

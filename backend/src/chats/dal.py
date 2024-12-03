@@ -1,6 +1,6 @@
 from pydantic import UUID4
 from datetime import datetime
-
+from typing import Any
 from sqlalchemy import select, update, delete
 
 from src.database import DatabaseManager
@@ -9,18 +9,18 @@ from src.chats.models import Chat, Message
 
 class ChatDal:
     @classmethod
-    async def create(cls, name: str, tokens: int) -> Chat:
+    async def create(cls, name: str) -> Chat:
         async with DatabaseManager.session_factory() as session:
-            chat = Chat(name=name, tokens=tokens)
+            chat = Chat(name=name)
             session.add(chat)
             await session.commit()
             await session.refresh(chat)
             return chat
 
     @classmethod
-    async def change_name(cls, uuid: UUID4, name: str):
+    async def update(cls, uuid: UUID4, payload: dict[str, Any]):
         async with DatabaseManager.session_factory() as session:
-            await session.execute(update(Chat), [{"uuid": uuid, "name": name}])
+            await session.execute(update(Chat), [{"uuid": uuid, **payload}])
             await session.commit()
 
     @classmethod
@@ -45,7 +45,13 @@ class ChatDal:
 class MessageDal:
     @classmethod
     async def create(
-        cls, role: str, content: str, date: datetime, stopped: bool, chat_uuid: UUID4
+        cls,
+        role: str,
+        content: str,
+        date: datetime,
+        stopped: bool,
+        chat_uuid: UUID4,
+        tokens: int,
     ) -> Message:
         async with DatabaseManager.session_factory() as session:
             message = Message(
@@ -54,6 +60,7 @@ class MessageDal:
                 date=date,
                 stopped=stopped,
                 chat_uuid=chat_uuid,
+                tokens=tokens,
             )
             session.add(message)
             await session.commit()
@@ -61,9 +68,11 @@ class MessageDal:
             return message
 
     @classmethod
-    async def update_message(cls, uuid: UUID4, content: str):
+    async def update_message(cls, uuid: UUID4, content: str, stopped: bool, tokens: int):
         async with DatabaseManager.session_factory() as session:
-            await session.execute(update(Message), [{"uuid": uuid, "content": content}])
+            await session.execute(
+                update(Message), [{"uuid": uuid, "content": content, "stopped": stopped, "tokens": tokens}]
+            )
             await session.commit()
 
     @classmethod

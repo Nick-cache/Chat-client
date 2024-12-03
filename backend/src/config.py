@@ -9,17 +9,11 @@ class App(BaseSettings):
     port: int = Field(alias="BACKEND_PORT")
     reload: bool = Field(alias="BACKEND_RELOAD")
     workers: int = Field(alias="BACKEND_WORKERS")
-
-
-class Redis(BaseSettings):
-    host: str = Field(alias="REDIS_HOST")
-    port: str = Field(alias="REDIS_PORT")
-    broker_idx: int = Field(alias="REDIS_BROKER")
-    cache_idx: int = Field(alias="REDIS_CACHE")
+    cors: list[str] = Field(alias="BACKEND_CORS")
 
 
 class Postgres(BaseSettings):
-    uri: str = Field(alias="POSTGRES_URI")
+    uri: str = Field(alias="POSTGRES_SERVICE")
 
     @property
     def sync_url(self) -> str:
@@ -42,19 +36,16 @@ class Settings:
     def __init__(
         self,
         app: BaseSettings,
-        redis: BaseSettings,
         postgres: BaseSettings,
         timezone: BaseSettings,
     ) -> None:
         self.app = app
-        self.redis = redis
         self.postgres = postgres
         self.timezone = timezone
 
 
 settings = Settings(
     App(),
-    Redis(),
     Postgres(),
     Timezone(),
 )

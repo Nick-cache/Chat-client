@@ -27,6 +27,7 @@ class Message(BaseModel):
         )
     )
     stopped: Mapped[bool] = mapped_column(Boolean, default=False)
+    tokens: Mapped[int] = mapped_column(Integer)
 
 
 class Chat(BaseModel):
@@ -37,6 +38,4 @@ class Chat(BaseModel):
         default=uuid4,
     )
     name: Mapped[str] = mapped_column(String(100))
-    tokens: Mapped[int] = mapped_column(Integer)
     messages: Mapped[list["Message"]] = relationship()
-    project_uuid: Mapped[Optional[UUID]] = mapped_column(ForeignKey("project.uuid"))

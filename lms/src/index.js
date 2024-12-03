@@ -1,24 +1,34 @@
 import express from "express";
 import cors from "cors";
-import { Server } from "socket.io";
 import { createServer } from "http";
-
 import { lmManager } from "./service.js";
 import { router as llmodels_router } from "./router.js";
+import { appCorsConfig } from "./config.js";
+import { socketEventsController } from "./socket.js";
+import { ioConfig } from "./config.js";
+import { Server } from "socket.io";
 
-const port = 3000;
+const app = express();
 
-const httpServer = createServer();
-const app = express(httpServer);
-const io = new Server(httpServer);
+const httpServer = createServer(app);
+export const io = new Server(httpServer, ioConfig);
 
-app.use(cors({ origin: ["http://localhost:5173"] }));
+httpServer.setMaxListeners(0);
+app.setMaxListeners(0);
+io.setMaxListeners(0);
+
+io.on("connection", async (socket) => {
+  socketEventsController.addAllEvents(socket);
+});
+
+app.use(cors(appCorsConfig));
 app.use(express.json());
 app.use(llmodels_router);
 app.once("started", async () => {
   await lmManager.init();
 });
-app.listen(port, () => {
-  console.log(`http://localhost:${port}`);
+
+httpServer.listen(3000, () => {
+  console.log("Started");
   app.emit("started");
 });

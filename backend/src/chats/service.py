@@ -6,12 +6,13 @@ from src.chats.dal import ChatDal, MessageDal
 
 class ChatService:
     @classmethod
-    async def create(cls, name: str, tokens: int):
-        return await ChatDal.create(name, tokens)
+    async def create(cls, name: str):
+        return await ChatDal.create(name)
 
     @classmethod
     async def change_name(cls, uuid: UUID4, name: str):
-        await ChatDal.change_name(uuid, name)
+        payload = {"name": name}
+        await ChatDal.update(uuid, payload)
 
     @classmethod
     async def get_by_uuid(cls, uuid: UUID4):
@@ -33,16 +34,19 @@ class ChatService:
         date: datetime,
         chat_uuid: UUID4,
         stopped: bool,
+        tokens: int,
     ):
-        await MessageDal.create(role, content, date, stopped, chat_uuid)
+        await MessageDal.create(role, content, date, stopped, chat_uuid, tokens)
 
     @classmethod
-    async def get_messages(chat_uuid: UUID4):
+    async def get_messages(cls, chat_uuid: UUID4):
         return await MessageDal.get_messages(chat_uuid)
 
     @classmethod
-    async def update_message(cls, uuid: UUID4, content: str):
-        await MessageDal.update_message(uuid, content)
+    async def update_message(
+        cls, uuid: UUID4, content: str, stopped: bool, tokens: int
+    ):
+        await MessageDal.update_message(uuid, content, stopped, tokens)
 
     @classmethod
     async def delete_messages(cls, uuids: list[UUID4]):

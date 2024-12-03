@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 class TestChats:
     chat = {
         "name": "new_chat",
-        "tokens": 100,
     }
 
     def test_create_chat(self, test_app: TestClient):
@@ -41,12 +40,10 @@ class TestChats:
             "uuid": uuid4().hex,
             "role": "user",
             "content": "Fake Updated",
-            "date": (datetime.now() + timedelta(minutes=1)).__str__(),
-            "chat_uuid": uuid4().hex,
             "stopped": False,
         }
         response = test_app.put(
-            url="/chats/update_messages/",
+            url="/chats/update_message/",
             json=message,
         )
         assert response.status_code == 422
