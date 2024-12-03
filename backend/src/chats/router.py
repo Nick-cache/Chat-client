@@ -8,7 +8,7 @@ from src.chats.exceptions import CHAT_EXCEPTIONS
 from src.chats.schemas import (
     ChatCreateSchema,
     ChatSchema,
-    ChatUpdateSchema,
+    ChatChangeNameSchema,
     MessageCreateSchema,
     MessageUpdateSchema,
     MessageSchema,
@@ -21,7 +21,7 @@ router = APIRouter(prefix="/chats", tags=["chats"])
 @router.post("/create_chat", response_model=ChatSchema)
 @to_http_exception(CHAT_EXCEPTIONS)
 async def create_chat(payload: ChatCreateSchema):
-    return await ChatService.create(payload.name, payload.tokens)
+    return await ChatService.create(payload.name)
 
 
 @router.get("/get_all", response_model=list[ChatSchema])
@@ -33,14 +33,21 @@ async def get_all_chats():
 @to_http_exception(CHAT_EXCEPTIONS)
 async def add_message(payload: MessageCreateSchema):
     await ChatService.add_message(
-        payload.role, payload.content, payload.date, payload.chat_uuid, payload.stopped
+        payload.role,
+        payload.content,
+        payload.date,
+        payload.chat_uuid,
+        payload.stopped,
+        payload.tokens,
     )
 
 
 @router.put("/update_message")
 @to_http_exception(CHAT_EXCEPTIONS)
 async def update_message(payload: MessageUpdateSchema):
-    await ChatService.update_message(payload.uuid, payload.content)
+    await ChatService.update_message(
+        payload.uuid, payload.content, payload.stopped, payload.tokens
+    )
 
 
 @router.put("/delete_messages")
@@ -49,22 +56,22 @@ async def delete_messages(payload: MessagesDeleteSchema):
     await ChatService.delete_messages(payload.uuids)
 
 
-@router.get("/{uuid}", response_model=ChatSchema)
-@to_http_exception(CHAT_EXCEPTIONS)
-async def get_chat(uuid: UUID4):
-    return await ChatService.get_by_uuid(uuid)
-
-
 @router.get("/{uuid}/messages", response_model=list[MessageSchema])
 @to_http_exception(CHAT_EXCEPTIONS)
 async def get_chat_messages(uuid: UUID4):
     return await ChatService.get_messages(uuid)
 
 
-@router.put("/{uuid}")
+@router.put("/{uuid}/change_name")
 @to_http_exception(CHAT_EXCEPTIONS)
-async def change_chat_name(uuid: UUID4, payload: ChatUpdateSchema):
+async def change_chat_name(uuid: UUID4, payload: ChatChangeNameSchema):
     await ChatService.change_name(uuid, payload.name)
+
+
+@router.get("/{uuid}", response_model=ChatSchema)
+@to_http_exception(CHAT_EXCEPTIONS)
+async def get_chat(uuid: UUID4):
+    return await ChatService.get_by_uuid(uuid)
 
 
 @router.delete("/{uuid}")
