@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
-import { BACKEND_DOMAIN_LINK } from "../../config";
+import { backend_link } from "../../config";
+
 // ! CHATS
 const chatsAdapter = createEntityAdapter({
   selectId: (chat) => chat.uuid,
@@ -11,7 +12,7 @@ export const chatsSlice = createApi({
   reducerPath: "chatsSlice",
   tagTypes: ["Chats"],
   baseQuery: fetchBaseQuery({
-    baseUrl: `${BACKEND_DOMAIN_LINK}/chats`,
+    baseUrl: `${backend_link}/chats`,
   }),
   endpoints: (builder) => ({
     getAllChats: builder.query({
@@ -79,7 +80,7 @@ export const messagesSlice = createApi({
   reducerPath: "messagesSlice",
   tagTypes: ["Messages"],
   baseQuery: fetchBaseQuery({
-    baseUrl: `${BACKEND_DOMAIN_LINK}/chats`,
+    baseUrl: `${backend_link}/chats`,
   }),
   endpoints: (builder) => ({
     getMessages: builder.query({

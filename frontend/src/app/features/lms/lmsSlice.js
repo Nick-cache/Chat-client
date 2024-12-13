@@ -2,7 +2,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 import { messagesSlice } from "../chats/chatsSlice";
-import { LMS_DOMAIN_LINK } from "../../config";
+import { lms_link } from "../../config";
+
 const getChosenModelLocal = () => {
   const parsed = JSON.parse(localStorage.getItem("chosenModel"));
   return { model: parsed };
@@ -56,7 +57,7 @@ const loadedModelsInitial = loadedModelsAdapter.getInitialState();
 export const lmsSlice = createApi({
   reducerPath: "lmsSlice",
   tagTypes: ["Models", "LoadedModels"],
-  baseQuery: fetchBaseQuery({ baseUrl: LMS_DOMAIN_LINK }),
+  baseQuery: fetchBaseQuery({ baseUrl: lms_link }),
   endpoints: (builder) => ({
     listModels: builder.query({
       query: () => ({
@@ -82,6 +83,7 @@ export const lmsSlice = createApi({
       query: ({ path, ident, contextLength, GPULayers }) => ({
         method: "POST",
         url: "/load_model",
+        timeout: 3 * 60 * 1000,
         body: {
           path: path,
           ident: ident,

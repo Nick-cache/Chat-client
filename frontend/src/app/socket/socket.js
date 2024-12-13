@@ -1,4 +1,4 @@
 import { io } from "socket.io-client";
-import { LMS_SOCKET } from "../config";
+import { lms_socket } from "../config";
 
-export const socket = io(LMS_SOCKET);
+export const socket = io(lms_socket);
