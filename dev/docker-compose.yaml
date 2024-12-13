@@ -1,4 +1,17 @@
 services:
+  postgres:
+    container_name: ${POSTGRES_NAME}
+    build:
+      context: ../
+      dockerfile: ./postgresql/Dockerfile
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_PORT
+    networks:
+      - postgres
+
   frontend:
     container_name: ${FRONTEND_NAME}
     build:
@@ -6,6 +19,7 @@ services:
       dockerfile: ./frontend/Dockerfile
     volumes:
       - ../frontend:/app
+      - /app/node_modules
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     environment:
@@ -13,7 +27,11 @@ services:
       - FRONTEND_DEV
       - LMS_DOMAIN_LINK
       - LMS_SOCKET_PATH
+      - LMS_DOMAIN_LINK_DEV
       - BACKEND_DOMAIN_LINK
+      - BACKEND_DOMAIN_LINK_DEV
+      - NODE_ENV=development
+    command: npm run dev
     networks:
       - lms
       - backend
