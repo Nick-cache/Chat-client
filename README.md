@@ -1,5 +1,4 @@
-# Chat Client
-
+# [Chat Client](https://chat.depo.com.ru/)
 The main idea is to help web developers efficently work with frontend on theres projects. Using community LLM's and providing better user expirience during UI development Chat Client is good alternative to all familiar services, but free and local.
 
 ---
