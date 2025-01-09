@@ -8,7 +8,6 @@ The main idea is to help web developers efficently work with frontend on theres 
 - <a href="#goals">Goals</a>
 - <a href="#tech_stack">Tech Stack</a>
 - <a href="#how_to_run">How to run</a>
-- <a href="#how_it_works">How it works [here](https://chat.depo.com.ru/)</a>
 
 ---
 
@@ -76,8 +75,3 @@ The main idea is to help web developers efficently work with frontend on theres 
 ![local server](LmStudio.png)
 3. To run dev: ```./manage.sh run dev -d -m -b```
 4. To get a description ```./manage.sh --help```
-
-## How it works [here](https://chat.depo.com.ru/)
-<div id="how_it_works"></div>
-
-![How it works](Schema.png)
